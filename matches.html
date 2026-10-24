@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경기 일정 및 결과 | KFL</title>
+  <meta name="description" content="KFL 리그 전체 경기 일정 및 실시간 스코어 결과">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <section style="margin-bottom: var(--spacing-lg);">
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: var(--spacing-sm);">
+          <div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0;">경기 일정 및 결과</h1>
+            <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">라운드, 구단, 상태별 경기 일정</p>
+          </div>
+          <div id="matches-count-badge" class="badge badge-neutral">불러오는 중...</div>
+        </div>
+      </section>
+
+      <!-- Filter Controls Bar -->
+      <div class="card mb-lg">
+        <!-- Status Filter -->
+        <div class="flex gap-xs mb-md" style="overflow-x: auto; padding-bottom: 2px;">
+          <button class="btn btn-sm btn-outline status-tab active" data-status="all">전체</button>
+          <button class="btn btn-sm btn-outline status-tab" data-status="live">진행 중 (LIVE)</button>
+          <button class="btn btn-sm btn-outline status-tab" data-status="scheduled">예정</button>
+          <button class="btn btn-sm btn-outline status-tab" data-status="finished">종료</button>
+        </div>
+
+        <!-- Round Pills -->
+        <div class="mb-md">
+          <div style="font-size: var(--text-xs); color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">라운드:</div>
+          <div id="round-filters-container" class="flex gap-xs" style="flex-wrap: wrap;"></div>
+        </div>
+
+        <!-- Team & Date Row -->
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: var(--spacing-sm); border-top: 1px solid var(--border-color); padding-top: var(--spacing-sm);">
+          <div class="flex gap-md items-center" style="flex-wrap: wrap;">
+            <div class="flex items-center gap-xs">
+              <label for="team-filter-select" style="margin: 0; font-size: var(--text-xs);">구단:</label>
+              <select id="team-filter-select" style="padding: 4px 8px; width: auto;">
+                <option value="all">모든 구단</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-xs">
+              <label for="date-filter-input" style="margin: 0; font-size: var(--text-xs);">날짜:</label>
+              <input type="date" id="date-filter-input" style="padding: 4px 8px; width: auto;">
+            </div>
+          </div>
+
+          <button id="reset-filters-btn" class="btn btn-sm btn-ghost" style="font-size: var(--text-xs);">
+            초기화 ↺
+          </button>
+        </div>
+      </div>
+
+      <!-- Matches List Container -->
+      <section id="matches-list-container"></section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/matches.js"></script>
+</body>
+</html>

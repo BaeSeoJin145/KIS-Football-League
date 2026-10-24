@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경기 영상 | KFL</title>
+  <meta name="description" content="KFL 경기 명장면 및 하이라이트 영상">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <section style="margin-bottom: var(--spacing-lg);">
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: var(--spacing-sm);">
+          <div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0;">경기 영상</h1>
+            <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">주요 하이라이트 및 골 모음</p>
+          </div>
+          <div id="highlights-count-badge" class="badge badge-neutral">불러오는 중...</div>
+        </div>
+      </section>
+
+      <!-- Filter Controls Bar -->
+      <div class="card mb-lg">
+        <div class="mb-sm">
+          <div style="font-size: var(--text-xs); color: var(--text-muted); font-weight: 600; margin-bottom: 4px;">구단별:</div>
+          <div id="highlights-team-filters" class="flex gap-xs" style="flex-wrap: wrap;"></div>
+        </div>
+
+        <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: var(--spacing-sm);">
+          <input type="text" id="highlight-search-input" placeholder="영상 제목 검색..." style="max-width: 240px; padding: 6px 12px; font-size: var(--text-xs);">
+        </div>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div class="grid grid-3" id="highlights-grid-container"></div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/highlights.js"></script>
+</body>
+</html>

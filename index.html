@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KFL | KIS Football League</title>
+  <meta name="description" content="KIS Football League (KFL) 공식 리그 웹앱 - 실시간 스코어, 일정, 순위 및 하이라이트">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Top Title Bar -->
+      <div class="flex justify-between items-center mb-md" style="flex-wrap: wrap; gap: var(--spacing-sm);">
+        <div class="flex items-center gap-sm">
+          <span class="badge badge-mint">2026 SPRING</span>
+          <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0; letter-spacing: -0.02em;">KIS FOOTBALL LEAGUE</h1>
+        </div>
+        <div class="flex gap-xs">
+          <a href="matches.html" class="btn btn-sm btn-outline">경기 일정</a>
+          <a href="standings.html" class="btn btn-sm btn-outline">순위표</a>
+          <a href="admin.html" class="btn btn-sm btn-primary">관리자 콘솔</a>
+        </div>
+      </div>
+
+      <!-- Bento Grid Dashboard -->
+      <div class="bento-grid">
+        
+        <!-- Bento 1: Featured / Live Match Spotlight (8 Cols) -->
+        <div class="bento-card col-span-8" id="hero-match-container" style="padding: 0; border: none; background: transparent; box-shadow: none;"></div>
+
+        <!-- Bento 2: League Glance & 1st Place Club (4 Cols) -->
+        <div class="bento-card col-span-4 flex flex-col justify-between" id="bento-leader-tile">
+          <div>
+            <div class="flex justify-between items-center mb-sm">
+              <span class="badge badge-yellow">LEAGUE LEADER</span>
+              <span style="font-size: var(--text-2xs); color: var(--text-muted);">실시간 기준</span>
+            </div>
+            <div style="font-size: var(--text-2xs); color: var(--text-muted); margin-top: 4px;">현재 1위 구단</div>
+            <h2 id="bento-leader-name" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 2px 0 8px 0;">불사조 FC</h2>
+            <div class="flex gap-md" style="font-size: var(--text-xs); color: var(--text-secondary);">
+              <span>승점: <strong id="bento-leader-pts" style="color: var(--kfl-dark-blue); font-size: var(--text-base);">6</strong> pts</span>
+              <span>전적: <strong id="bento-leader-record" style="color: var(--text-primary);">2승 0무 0패</strong></span>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: var(--text-2xs); color: var(--text-muted);">전체 순위 및 득실 확인</span>
+            <a href="standings.html" class="btn btn-sm btn-outline" style="border-radius: var(--radius-full);">순위표 →</a>
+          </div>
+        </div>
+
+        <!-- Bento 3: Recent & Upcoming Matches (7 Cols) -->
+        <div class="bento-card col-span-7 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-md">
+              <div class="flex items-center gap-xs">
+                <span style="color: var(--kfl-base-blue); font-weight: 800;">●</span>
+                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">경기 일정 및 결과</h3>
+              </div>
+              <div class="flex gap-xs">
+                <button class="chip active" id="bento-tab-recent" onclick="switchHomeMatchesTab('recent')" style="padding: 3px 10px; font-size: 11px;">최근 결과</button>
+                <button class="chip" id="bento-tab-upcoming" onclick="switchHomeMatchesTab('upcoming')" style="padding: 3px 10px; font-size: 11px;">다음 일정</button>
+              </div>
+            </div>
+
+            <!-- Matches container -->
+            <div id="home-matches-display" class="flex flex-col gap-xs"></div>
+          </div>
+
+          <div style="margin-top: 14px; text-align: right;">
+            <a href="matches.html" style="font-size: var(--text-xs); color: var(--kfl-dark-blue); font-weight: 600;">전체 일정 및 결과 더보기 →</a>
+          </div>
+        </div>
+
+        <!-- Bento 4: Mini Standings Table (5 Cols) -->
+        <div class="bento-card col-span-5 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-sm">
+              <div class="flex items-center gap-xs">
+                <span style="color: var(--kfl-base-blue); font-weight: 800;">■</span>
+                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">리그 순위 (TOP 4)</h3>
+              </div>
+              <a href="standings.html" style="font-size: var(--text-2xs); color: var(--text-muted);">전체보기</a>
+            </div>
+
+            <table class="table" style="font-size: var(--text-xs);">
+              <thead>
+                <tr>
+                  <th style="width: 28px; text-align: center;">#</th>
+                  <th>구단</th>
+                  <th style="text-align: center;">경기</th>
+                  <th style="text-align: center;">승</th>
+                  <th style="text-align: center;">득실</th>
+                  <th style="text-align: center;">승점</th>
+                </tr>
+              </thead>
+              <tbody id="mini-standings-body"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: var(--text-2xs); color: var(--text-muted);">
+            <span>1위: 챔피언십 우승</span>
+            <a href="standings.html" style="color: var(--kfl-dark-blue);">상세 순위표 →</a>
+          </div>
+        </div>
+
+        <!-- Bento 5: Top Scorers - Golden Boot (6 Cols) -->
+        <div class="bento-card col-span-6 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-md">
+              <div class="flex items-center gap-xs">
+                <span class="badge badge-yellow">GOLDEN BOOT</span>
+                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">득점 순위</h3>
+              </div>
+              <a href="standings.html" style="font-size: var(--text-2xs); color: var(--text-muted);">전체 기록실</a>
+            </div>
+
+            <div id="top-scorers-container"></div>
+          </div>
+
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); text-align: right;">
+            <a href="standings.html" style="font-size: var(--text-xs); color: var(--kfl-dark-blue);">도움 순위 및 선수 통계 보기 →</a>
+          </div>
+        </div>
+
+        <!-- Bento 6: Video Highlights (6 Cols) -->
+        <div class="bento-card col-span-6 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-md">
+              <div class="flex items-center gap-xs">
+                <span class="badge badge-mint">HIGHLIGHTS</span>
+                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">경기 영상</h3>
+              </div>
+              <a href="highlights.html" style="font-size: var(--text-2xs); color: var(--text-muted);">전체 영상</a>
+            </div>
+
+            <div id="home-highlights-container" class="grid grid-2" style="gap: 12px;"></div>
+          </div>
+
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); text-align: right;">
+            <a href="highlights.html" style="font-size: var(--text-xs); color: var(--kfl-dark-blue);">모든 하이라이트 영상 보기 →</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

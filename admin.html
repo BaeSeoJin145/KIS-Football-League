@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KFL 리그 관리자 포털</title>
+  <meta name="description" content="KFL 공식 리그 관리자 포털 - 팀, 경기 일정, 실시간 스코어, 이벤트, 선수 명단 관리">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="max-width: 1000px;">
+      
+      <!-- Admin Login Form (Shown when unauthenticated) -->
+      <section id="admin-login-section" style="margin: 60px auto; max-width: 400px;">
+        <div class="card" style="padding: var(--spacing-xl);">
+          <div style="margin-bottom: var(--spacing-lg); text-align: center;">
+            <h1 style="font-size: var(--text-xl); font-weight: 800; margin-bottom: 4px;">리그 관리자 로그인</h1>
+            <p style="font-size: var(--text-xs); color: var(--text-muted);">
+              팀, 경기 일정 및 실시간 스코어를 관리합니다.
+            </p>
+          </div>
+
+          <form id="admin-login-form">
+            <div style="margin-bottom: var(--spacing-md);">
+              <label for="admin-email">관리자 이메일</label>
+              <input type="email" id="admin-email" required placeholder="admin@kfl.league">
+            </div>
+
+            <div style="margin-bottom: var(--spacing-lg);">
+              <label for="admin-password">비밀번호</label>
+              <input type="password" id="admin-password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700;">
+              로그인
+            </button>
+          </form>
+
+          <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-sm); border-top: 1px solid var(--border-subtle); font-size: var(--text-xs); color: var(--text-muted); text-align: center;">
+            Supabase 미설정 상태에서는 테스트용 이메일과 비밀번호로 데모 관리자 모드에 접속할 수 있습니다.
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Dashboard (Shown when authenticated) -->
+      <section id="admin-dashboard-section" style="display: none;">
+        
+        <!-- Dashboard Top Status Bar -->
+        <div class="flex justify-between items-center mb-lg" style="flex-wrap: wrap; gap: var(--spacing-sm); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--border-color);">
+          <div>
+            <div class="flex items-center gap-sm">
+              <h1 style="font-size: var(--text-xl); font-weight: 800; margin: 0;">리그 관리 콘솔</h1>
+              <span id="admin-mode-badge" class="badge badge-neutral">모드 확인 중</span>
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">
+              접속 계정: <span id="admin-user-email" style="color: var(--text-primary); font-weight: 600;"></span>
+            </div>
+          </div>
+
+          <div class="flex gap-sm">
+            <button id="admin-logout-btn" class="btn btn-sm btn-outline">로그아웃</button>
+          </div>
+        </div>
+
+        <!-- Admin Navigation Tabs -->
+        <div class="card" style="padding: 6px; margin-bottom: var(--spacing-lg); overflow-x: auto;">
+          <div class="flex gap-xs">
+            <button class="btn btn-sm btn-ghost admin-nav-btn active" data-admin-tab="adm-tab-teams">구단 관리</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-fixtures">경기 일정</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-live">실시간 스코어</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-events">경기 이벤트</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-players">선수 명단</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-highlights">하이라이트</button>
+          </div>
+        </div>
+
+        <!-- 1. Teams Management Tab -->
+        <div id="adm-tab-teams" class="admin-tab-pane active">
+          <!-- Add / Edit Team Form Card -->
+          <div class="card mb-lg">
+            <h3 id="team-form-title" style="margin-top: 0; margin-bottom: var(--spacing-md); font-size: var(--text-base);">새 구단 (팀) 추가</h3>
+            <form id="admin-team-form">
+              <input type="hidden" id="team-edit-id" value="">
+              
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="team-name-input">구단 이름 *</label>
+                  <input type="text" id="team-name-input" required placeholder="예: 불사조 FC">
+                </div>
+                <div>
+                  <label for="team-short-input">구단 약칭 *</label>
+                  <input type="text" id="team-short-input" required placeholder="예: PHX" maxlength="6">
+                </div>
+              </div>
+
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="team-coach-input">감독 이름</label>
+                  <input type="text" id="team-coach-input" placeholder="예: 김철수 감독">
+                </div>
+                <div>
+                  <label for="team-desc-input">구단 설명</label>
+                  <input type="text" id="team-desc-input" placeholder="전술 스타일 또는 특징">
+                </div>
+              </div>
+
+              <div class="flex gap-sm">
+                <button type="submit" id="team-form-submit-btn" class="btn btn-sm btn-primary">구단 등록</button>
+                <button type="button" id="team-form-cancel-btn" class="btn btn-sm btn-outline" style="display: none;">취소</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Teams Table -->
+          <div class="card" style="overflow-x: auto;">
+            <div class="flex justify-between items-center mb-sm">
+              <h4 style="margin: 0; font-size: var(--text-sm);">등록된 구단 목록</h4>
+              <span id="teams-count-badge" class="badge badge-neutral">0개 팀</span>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>구단명</th>
+                  <th>약칭</th>
+                  <th>감독</th>
+                  <th>설명</th>
+                  <th style="width: 130px; text-align: center;">관리</th>
+                </tr>
+              </thead>
+              <tbody id="admin-teams-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Fixtures Management Tab -->
+        <div id="adm-tab-fixtures" class="admin-tab-pane">
+          <!-- Add / Edit Match Form Card -->
+          <div class="card mb-lg">
+            <h3 id="fixture-form-title" style="margin-top: 0; margin-bottom: var(--spacing-md); font-size: var(--text-base);">새 경기 일정 생성</h3>
+            <form id="admin-fixture-form">
+              <input type="hidden" id="fixture-edit-id" value="">
+
+              <div class="grid grid-3 mb-md">
+                <div>
+                  <label for="fixture-home-select">홈팀 *</label>
+                  <select id="fixture-home-select" required></select>
+                </div>
+                <div>
+                  <label for="fixture-away-select">원정팀 *</label>
+                  <select id="fixture-away-select" required></select>
+                </div>
+                <div>
+                  <label for="fixture-round">라운드 *</label>
+                  <input type="number" id="fixture-round" value="1" min="1" max="38" required>
+                </div>
+              </div>
+
+              <div class="grid grid-3 mb-md">
+                <div>
+                  <label for="fixture-datetime">경기 일시 *</label>
+                  <input type="datetime-local" id="fixture-datetime" required>
+                </div>
+                <div>
+                  <label for="fixture-venue">경기 장소</label>
+                  <input type="text" id="fixture-venue" value="KIS 메인 스타디움" required>
+                </div>
+                <div>
+                  <label for="fixture-status">경기 상태</label>
+                  <select id="fixture-status">
+                    <option value="scheduled">예정 (scheduled)</option>
+                    <option value="live">진행 중 (live)</option>
+                    <option value="halftime">하프타임 (halftime)</option>
+                    <option value="finished">종료 (finished)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="flex gap-sm">
+                <button type="submit" id="fixture-form-submit-btn" class="btn btn-sm btn-primary">경기 일정 생성</button>
+                <button type="button" id="fixture-form-cancel-btn" class="btn btn-sm btn-outline" style="display: none;">취소</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Matches Table -->
+          <div class="card" style="overflow-x: auto;">
+            <div class="flex justify-between items-center mb-sm">
+              <h4 style="margin: 0; font-size: var(--text-sm);">등록된 경기 목록</h4>
+              <span id="matches-count-badge" class="badge badge-neutral">0경기</span>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">라운드</th>
+                  <th>홈팀 vs 원정팀</th>
+                  <th style="text-align: center; width: 70px;">스코어</th>
+                  <th style="width: 80px;">상태</th>
+                  <th>일시 · 장소</th>
+                  <th style="width: 170px; text-align: center;">관리</th>
+                </tr>
+              </thead>
+              <tbody id="admin-matches-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. Live Controller Tab -->
+        <div id="adm-tab-live" class="admin-tab-pane">
+          <div class="card mb-md">
+            <label for="live-ctrl-match-select" style="margin-bottom: 6px;">진행/조작할 경기 선택:</label>
+            <select id="live-ctrl-match-select" style="font-weight: 700;"></select>
+          </div>
+          <div id="live-ctrl-panel"></div>
+        </div>
+
+        <!-- 4. Events Logger Tab -->
+        <div id="adm-tab-events" class="admin-tab-pane">
+          <div class="card mb-lg">
+            <h3 style="margin-top: 0; margin-bottom: var(--spacing-md); font-size: var(--text-base);">골 / 카드 / 교체 이벤트 기록</h3>
+            
+            <form id="admin-event-form">
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="event-match-select">경기 선택 *</label>
+                  <select id="event-match-select" required></select>
+                </div>
+
+                <div>
+                  <label for="event-type-select">이벤트 종류 *</label>
+                  <select id="event-type-select" required>
+                    <option value="goal">골 (Goal)</option>
+                    <option value="own_goal">자책골 (Own Goal)</option>
+                    <option value="yellow_card">경고 (Yellow Card)</option>
+                    <option value="red_card">퇴장 (Red Card)</option>
+                    <option value="substitution_in">교체 투입 (Sub In)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="event-player-select">선수 선택 *</label>
+                  <select id="event-player-select" required></select>
+                </div>
+
+                <div>
+                  <label for="event-assist-select">도움 선수 (선택)</label>
+                  <select id="event-assist-select"></select>
+                </div>
+              </div>
+
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="event-minute-input">경기 시간 (분) *</label>
+                  <input type="number" id="event-minute-input" required min="1" max="120" value="45">
+                </div>
+
+                <div>
+                  <label for="event-notes-input">메모 (선택)</label>
+                  <input type="text" id="event-notes-input" placeholder="예: 오른발 중거리 슛">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-sm btn-primary">이벤트 기록 및 스코어 자동 계산</button>
+            </form>
+          </div>
+
+          <!-- Existing Events for Selected Match -->
+          <div class="card" style="overflow-x: auto;">
+            <h4 style="margin: 0 0 var(--spacing-sm) 0; font-size: var(--text-sm);">해당 경기의 기록된 이벤트</h4>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">시간</th>
+                  <th>유형</th>
+                  <th>선수</th>
+                  <th>도움</th>
+                  <th>메모</th>
+                  <th style="width: 80px; text-align: center;">삭제</th>
+                </tr>
+              </thead>
+              <tbody id="admin-events-table-body">
+                <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">상단에서 경기를 선택하세요.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 5. Players Tab -->
+        <div id="adm-tab-players" class="admin-tab-pane">
+          <div class="card mb-lg">
+            <h3 id="player-form-title" style="margin-top: 0; margin-bottom: var(--spacing-md); font-size: var(--text-base);">새 선수 등록</h3>
+            <form id="admin-player-form">
+              <input type="hidden" id="player-edit-id" value="">
+
+              <div class="grid grid-3 mb-md">
+                <div>
+                  <label for="player-name-input">선수 이름 *</label>
+                  <input type="text" id="player-name-input" required placeholder="예: 손흥민">
+                </div>
+                <div>
+                  <label for="player-number-input">등번호 *</label>
+                  <input type="number" id="player-number-input" required min="1" max="99" value="10">
+                </div>
+                <div>
+                  <label for="player-position-select">포지션 *</label>
+                  <select id="player-position-select" required>
+                    <option value="FW">FW 공격수</option>
+                    <option value="MF">MF 미드필더</option>
+                    <option value="DF">DF 수비수</option>
+                    <option value="GK">GK 골키퍼</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-2 mb-md">
+                <div>
+                  <label for="player-team-select">소속 구단 *</label>
+                  <select id="player-team-select" required></select>
+                </div>
+                <div>
+                  <label for="player-bio-input">선수 소개</label>
+                  <input type="text" id="player-bio-input" placeholder="특징 또는 스타일">
+                </div>
+              </div>
+
+              <div class="flex gap-sm">
+                <button type="submit" id="player-form-submit-btn" class="btn btn-sm btn-primary">선수 등록</button>
+                <button type="button" id="player-form-cancel-btn" class="btn btn-sm btn-outline" style="display: none;">취소</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card" style="overflow-x: auto;">
+            <div class="flex justify-between items-center mb-sm">
+              <h4 style="margin: 0; font-size: var(--text-sm);">등록된 선수 목록</h4>
+              <span id="players-count-badge" class="badge badge-neutral">0명</span>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">번호</th>
+                  <th>이름</th>
+                  <th>포지션</th>
+                  <th>소속 구단</th>
+                  <th style="width: 120px; text-align: center;">관리</th>
+                </tr>
+              </thead>
+              <tbody id="admin-players-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 6. Highlights Tab -->
+        <div id="adm-tab-highlights" class="admin-tab-pane">
+          <div class="card mb-lg">
+            <h3 style="margin-top: 0; margin-bottom: var(--spacing-md); font-size: var(--text-base);">하이라이트 영상 등록</h3>
+            <form id="admin-highlight-form">
+              <div class="mb-md">
+                <label for="highlight-match-select">관련 경기 (선택)</label>
+                <select id="highlight-match-select"></select>
+              </div>
+
+              <div class="mb-md">
+                <label for="highlight-title-input">영상 제목 *</label>
+                <input type="text" id="highlight-title-input" required placeholder="예: 2R 불사조 vs 드래곤즈 하이라이트">
+              </div>
+
+              <div class="mb-md">
+                <label for="highlight-url-input">YouTube 영상 URL *</label>
+                <input type="url" id="highlight-url-input" required placeholder="https://www.youtube.com/watch?v=...">
+              </div>
+
+              <div class="mb-md">
+                <label for="highlight-desc-input">간단 설명</label>
+                <input type="text" id="highlight-desc-input" placeholder="영상 주요 장면 설명">
+              </div>
+
+              <button type="submit" class="btn btn-sm btn-primary">영상 등록</button>
+            </form>
+          </div>
+
+          <div class="card" style="overflow-x: auto;">
+            <h4 style="margin: 0 0 var(--spacing-sm) 0; font-size: var(--text-sm);">등록된 영상 목록</h4>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>제목</th>
+                  <th>영상 링크</th>
+                  <th style="width: 70px; text-align: center;">삭제</th>
+                </tr>
+              </thead>
+              <tbody id="admin-highlights-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

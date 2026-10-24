@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#0303A2" />
+  <rect x="52" y="52" width="408" height="408" fill="#0101C8" stroke="#151515" stroke-width="20" />
+  <rect x="96" y="344" width="320" height="48" fill="#02FCFF" stroke="#151515" stroke-width="12" />
+  <text x="256" y="288" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="142" fill="#FFFFFF" letter-spacing="-6">KFL</text>
+</svg>

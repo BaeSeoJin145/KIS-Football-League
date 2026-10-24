@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>경기 센터 | KFL</title>
+  <meta name="description" content="KFL 경기 센터 - 스코어, 타임라인, 라인업, 경기 통계">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="max-width: 860px;">
+      
+      <!-- Back link -->
+      <div class="mb-md">
+        <a href="matches.html" style="font-size: var(--text-xs); color: var(--text-muted);">← 경기 목록으로 돌아가기</a>
+      </div>
+
+      <div id="match-detail-content">
+        <!-- Hero Scoreboard -->
+        <div id="match-scoreboard"></div>
+
+        <!-- Detail Tabs Navigation -->
+        <div class="card mb-lg" style="padding: 6px;">
+          <div class="flex gap-xs justify-center" style="overflow-x: auto;">
+            <button class="btn btn-sm btn-ghost detail-tab-btn active" data-tab="tab-timeline">타임라인</button>
+            <button class="btn btn-sm btn-ghost detail-tab-btn" data-tab="tab-lineups">라인업</button>
+            <button class="btn btn-sm btn-ghost detail-tab-btn" data-tab="tab-stats">경기 통계</button>
+            <button class="btn btn-sm btn-ghost detail-tab-btn" data-tab="tab-highlights">영상</button>
+          </div>
+        </div>
+
+        <!-- Tab Panes -->
+        <div id="tab-timeline" class="detail-tab-pane active"></div>
+        <div id="tab-lineups" class="detail-tab-pane" style="display: none;"></div>
+        <div id="tab-stats" class="detail-tab-pane" style="display: none;"></div>
+        <div id="tab-highlights" class="detail-tab-pane" style="display: none;"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/match-detail.js"></script>
+</body>
+</html>
