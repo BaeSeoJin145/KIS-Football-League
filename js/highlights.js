@@ -108,12 +108,10 @@ function renderFilteredHighlights() {
       ? `${match.home_team.name || ''} ${match.home_score ?? 0} : ${match.away_score ?? 0} ${match.away_team.name || ''}` 
       : '';
     const duration = h.duration_seconds ? formatDuration(h.duration_seconds) : '';
-    const thumb = h.thumbnail_url || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80';
-
     return `
-      <div class="card card-interactive" onclick="openHighlightModal('${h.video_url}', '${escapeHtml(h.title)}', '${escapeHtml(h.description || '')}')" style="overflow: hidden;">
+      <div class="card card-interactive" data-video-url="${escapeHtml(h.video_url)}" data-video-title="${escapeHtml(h.title)}" data-video-description="${escapeHtml(h.description || '')}" onclick="openHighlightModal(this.dataset.videoUrl, this.dataset.videoTitle, this.dataset.videoDescription)" style="overflow: hidden;">
         <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #000;">
-          <img src="${thumb}" alt="${escapeHtml(h.title)}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;">
+          ${renderHighlightThumbnail(h.thumbnail_url, h.title, 'width: 100%; height: 100%; object-fit: cover; opacity: 0.85;')}
           <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
             <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--kfl-dark-blue); display: flex; align-items: center; justify-content: center; color: var(--kfl-mint); font-size: 22px;">
               재생
@@ -124,8 +122,8 @@ function renderFilteredHighlights() {
 
         <div class="card-body" style="padding: var(--spacing-lg);">
           ${matchText ? `<span style="font-size: var(--text-xs); color: var(--color-primary); font-weight: 700;">${matchText}</span>` : ''}
-          <h3 style="margin: var(--spacing-xs) 0; font-size: var(--text-base); font-weight: 800; line-height: 1.4;">${h.title}</h3>
-          ${h.description ? `<p style="margin: 0; font-size: var(--text-xs); color: var(--text-muted); line-height: 1.5;">${h.description}</p>` : ''}
+          <h3 style="margin: var(--spacing-xs) 0; font-size: var(--text-base); font-weight: 800; line-height: 1.4;">${escapeHtml(h.title)}</h3>
+          ${h.description ? `<p style="margin: 0; font-size: var(--text-xs); color: var(--text-muted); line-height: 1.5;">${escapeHtml(h.description)}</p>` : ''}
           ${h.match_id ? `<a href="match-detail.html?id=${h.match_id}" class="btn btn-sm btn-outline mt-md" onclick="event.stopPropagation();">경기 기록 보기 →</a>` : ''}
         </div>
       </div>
@@ -136,13 +134,13 @@ function renderFilteredHighlights() {
 function openHighlightModal(videoUrl, title, desc) {
   const embedUrl = getYouTubeEmbedUrl(videoUrl);
   showModal({
-    title,
-    content: `
+    title: escapeHtml(title),
+    content: embedUrl ? `
       <div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #000; margin-bottom: var(--spacing-md);">
-        <iframe src="${embedUrl}" title="${title}" style="width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe src="${embedUrl}" title="${escapeHtml(title)}" style="width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-      ${desc ? `<p style="font-size: var(--text-sm); color: var(--text-muted); line-height: 1.6; margin: 0;">${desc}</p>` : ''}
-    `,
+      ${desc ? `<p style="font-size: var(--text-sm); color: var(--text-muted); line-height: 1.6; margin: 0;">${escapeHtml(desc)}</p>` : ''}
+    ` : '<p>지원하지 않는 YouTube 영상 주소입니다.</p>',
     id: 'highlight-player-modal'
   });
 }

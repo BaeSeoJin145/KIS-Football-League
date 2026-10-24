@@ -2,6 +2,35 @@
 // KFL Utility Functions
 // ============================================
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character]);
+}
+
+function getYouTubeEmbedUrl(videoUrl) {
+  try {
+    const url = new URL(videoUrl);
+    const host = url.hostname.replace(/^www\./, '');
+    let videoId = '';
+
+    if (host === 'youtu.be') {
+      videoId = url.pathname.slice(1);
+    } else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+      videoId = url.searchParams.get('v') || url.pathname.match(/^\/embed\/([^/]+)/)?.[1] || '';
+    }
+
+    if (!/^[\w-]{11}$/.test(videoId)) return '';
+    return `https://www.youtube-nocookie.com/embed/${videoId}`;
+  } catch {
+    return '';
+  }
+}
+
 /**
  * Format date for display
  */
@@ -41,6 +70,13 @@ function formatTime(dateStr) {
     minute: '2-digit',
     timeZone: KFL_CONFIG.DEFAULT_TIMEZONE
   });
+}
+
+function formatDuration(seconds) {
+  const totalSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainingSeconds = totalSeconds % 60;
+  return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
 /**
@@ -106,6 +142,16 @@ function isToday(dateStr) {
  */
 function getTodayStr() {
   return new Date().toISOString().split('T')[0];
+}
+
+function groupBy(items, getKey) {
+  const groups = new Map();
+  items.forEach(item => {
+    const key = getKey(item);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  });
+  return Object.fromEntries(groups);
 }
 
 /**
@@ -236,6 +282,46 @@ function calculateStandings(matches, teams) {
     if (b.goals_for !== a.goals_for) return b.goals_for - a.goals_for;
     return a.team_name.localeCompare(b.team_name);
   });
+}
+
+function calculateTopScorers(events, limit = 5) {
+  const scorers = new Map();
+
+  events.forEach(event => {
+    if (event.type !== 'goal' || !event.player_id) return;
+
+    const scorer = scorers.get(event.player_id) || {
+      player: event.player || null,
+      team: event.player?.teams || null,
+      goals: 0
+    };
+    scorer.goals++;
+    scorers.set(event.player_id, scorer);
+  });
+
+  return [...scorers.values()]
+    .sort((a, b) => b.goals - a.goals || (a.player?.name || '').localeCompare(b.player?.name || ''))
+    .slice(0, limit);
+}
+
+function calculateTopAssists(events, limit = 5) {
+  const assistLeaders = new Map();
+
+  events.forEach(event => {
+    if (event.type !== 'goal' || !event.assist_player_id) return;
+
+    const assister = assistLeaders.get(event.assist_player_id) || {
+      player: event.assist_player || null,
+      team: event.assist_player?.teams || null,
+      assists: 0
+    };
+    assister.assists++;
+    assistLeaders.set(event.assist_player_id, assister);
+  });
+
+  return [...assistLeaders.values()]
+    .sort((a, b) => b.assists - a.assists || (a.player?.name || '').localeCompare(b.player?.name || ''))
+    .slice(0, limit);
 }
 
 /**

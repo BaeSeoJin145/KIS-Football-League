@@ -224,6 +224,55 @@ function showModal({ title, content, footer = '', onClose, id = 'app-modal' }) {
   return overlay;
 }
 
+function renderHighlightThumbnail(url, title, style) {
+  if (url) {
+    return `<img src="${escapeHtml(url)}" alt="${escapeHtml(title)}" style="${style}">`;
+  }
+  return `
+    <div role="img" aria-label="${escapeHtml(title)}" style="${style}; display: flex; align-items: center; justify-content: center; background: var(--kfl-dark-blue); color: var(--kfl-mint); font-size: var(--text-sm); font-weight: 800; letter-spacing: 0.08em;">
+      KFL HIGHLIGHTS
+    </div>
+  `;
+}
+
+function renderHighlightCard(highlight) {
+  const matchInfo = highlight.match
+    ? `${highlight.match.home_team?.short_name || ''} vs ${highlight.match.away_team?.short_name || ''}`
+    : '';
+  const duration = highlight.duration_seconds ? formatDuration(highlight.duration_seconds) : '';
+
+  return `
+    <div class="card card-interactive" data-video-url="${escapeHtml(highlight.video_url)}" data-video-title="${escapeHtml(highlight.title)}" onclick="openVideoModal(this.dataset.videoUrl, this.dataset.videoTitle)">
+      <div style="position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: var(--radius-sm); background: #000;">
+        ${renderHighlightThumbnail(highlight.thumbnail_url, highlight.title, 'width: 100%; height: 100%; object-fit: cover; opacity: 0.85;')}
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--kfl-dark-blue); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;">
+            재생
+          </div>
+        </div>
+        ${duration ? `<span style="position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 3px;">${duration}</span>` : ''}
+      </div>
+      <div style="padding-top: 8px;">
+        ${matchInfo ? `<span style="font-size: var(--text-2xs); color: var(--kfl-dark-blue); font-weight: 700;">${escapeHtml(matchInfo)}</span>` : ''}
+        <h4 style="margin: 2px 0 0 0; font-size: var(--text-xs); font-weight: 700; line-height: 1.4;">${escapeHtml(highlight.title)}</h4>
+      </div>
+    </div>
+  `;
+}
+
+function openVideoModal(url, title) {
+  const embedUrl = getYouTubeEmbedUrl(url);
+  showModal({
+    title: escapeHtml(title || '하이라이트 영상'),
+    content: embedUrl
+      ? `<div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #000;">
+          <iframe src="${embedUrl}" title="${escapeHtml(title || '하이라이트 영상')}" style="width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>`
+      : '<p>지원하지 않는 YouTube 영상 주소입니다.</p>',
+    id: 'highlight-video-modal'
+  });
+}
+
 function closeModal(id = 'app-modal', onClose) {
   const overlay = document.getElementById(id);
   if (!overlay) return;

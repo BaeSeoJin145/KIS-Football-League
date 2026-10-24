@@ -250,7 +250,7 @@ const KFL_MOCK_DATA = {
       match_id: 'm-101',
       title: '불사조 FC vs 안암 타이거즈 1R 하이라이트',
       video_url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
-      thumbnail_url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+      thumbnail_url: null,
       duration_seconds: 184,
       description: '손흥민의 환상적인 멀티골과 불사조 FC의 화끈한 개막전 3-1 승리 명장면!'
     },
@@ -259,7 +259,7 @@ const KFL_MOCK_DATA = {
       match_id: 'm-102',
       title: '블루 드래곤즈 vs 서해 샤크스 명승부 하이라이트',
       video_url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
-      thumbnail_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80',
+      thumbnail_url: null,
       duration_seconds: 215,
       description: '후반 종료 직전까지 이어진 팽팽한 혈투 끝에 2-2 무승부를 거둔 명경기!'
     },
@@ -268,7 +268,7 @@ const KFL_MOCK_DATA = {
       match_id: 'm-103',
       title: '한라 울브스 vs 선더 이글스 결승골 장면',
       video_url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk',
-      thumbnail_url: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80',
+      thumbnail_url: null,
       duration_seconds: 142,
       description: '세트피스에서 터진 선더 이글스의 결승 헤더골 클립.'
     }

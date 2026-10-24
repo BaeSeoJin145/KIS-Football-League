@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadMatchDetail() {
   const container = document.getElementById('match-detail-content');
   try {
-    if (container) showLoading(container, 2);
+    const scoreboard = document.getElementById('match-scoreboard');
+    if (scoreboard) showLoading(scoreboard, 1);
 
     const [match, events, lineups, highlights] = await Promise.all([
       fetchMatch(currentMatchId),
@@ -313,12 +314,18 @@ function setupDetailTabs() {
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
-      panes.forEach(p => p.classList.remove('active'));
+      panes.forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+      });
 
       tab.classList.add('active');
       const targetId = tab.getAttribute('data-tab');
       const targetPane = document.getElementById(targetId);
-      if (targetPane) targetPane.classList.add('active');
+      if (targetPane) {
+        targetPane.classList.add('active');
+        targetPane.style.display = 'block';
+      }
     });
   });
 }

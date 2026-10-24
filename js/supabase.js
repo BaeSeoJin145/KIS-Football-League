@@ -296,7 +296,8 @@ async function fetchMatchEvents(matchId) {
         .from('match_events')
         .select(`
           *,
-          player:players(id, name, number, team_id)
+          player:players!match_events_player_id_fkey(id, name, number, team_id),
+          assist_player:players!match_events_assist_player_id_fkey(id, name, number, team_id)
         `)
         .eq('match_id', matchId)
         .order('minute', { ascending: true });
@@ -404,7 +405,8 @@ async function fetchAllEvents(seasonId) {
         .from('match_events')
         .select(`
           *,
-          player:players(id, name, number, team_id, teams(id, name, short_name)),
+          player:players!match_events_player_id_fkey(id, name, number, team_id, teams(id, name, short_name)),
+          assist_player:players!match_events_assist_player_id_fkey(id, name, number, team_id, teams(id, name, short_name)),
           match:matches(id, season_id, status)
         `)
         .order('created_at', { ascending: false });
@@ -430,6 +432,10 @@ async function fetchAllEvents(seasonId) {
         ...p,
         teams: teamsMap[p.team_id] || null
       },
+      assist_player: playersMap[ev.assist_player_id] ? {
+        ...playersMap[ev.assist_player_id],
+        teams: teamsMap[playersMap[ev.assist_player_id].team_id] || null
+      } : null,
       match: matchesMap[ev.match_id] || null
     };
   });

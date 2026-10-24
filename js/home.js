@@ -73,7 +73,7 @@ async function loadHomePageData() {
       const leaderPtsEl = document.getElementById('bento-leader-pts');
       const leaderRecordEl = document.getElementById('bento-leader-record');
 
-      if (leaderNameEl) leaderNameEl.textContent = leader.name;
+      if (leaderNameEl) leaderNameEl.textContent = leader.team_name;
       if (leaderPtsEl) leaderPtsEl.textContent = leader.points;
       if (leaderRecordEl) leaderRecordEl.textContent = `${leader.won}승 ${leader.drawn}무 ${leader.lost}패 (${leader.goals_for}득점)`;
     }
@@ -87,10 +87,10 @@ async function loadHomePageData() {
       miniTableBody.innerHTML = top4.map((team, idx) => `
         <tr class="table-row-hover" onclick="location.href='standings.html'">
           <td style="font-weight: 800; color: ${idx === 0 ? 'var(--kfl-mint)' : 'inherit'}; text-align: center;">${idx + 1}</td>
-          <td><strong style="color: ${idx === 0 ? '#ffffff' : 'var(--text-primary)'};">${team.name}</strong></td>
+          <td><strong style="color: ${idx === 0 ? '#ffffff' : 'var(--text-primary)'};">${team.team_name}</strong></td>
           <td style="text-align: center;">${team.played}</td>
           <td style="text-align: center; color: var(--kfl-base-blue); font-weight: 700;">${team.won}</td>
-          <td style="text-align: center; color: var(--text-muted);">${team.goal_diff > 0 ? `+${team.goal_diff}` : team.goal_diff}</td>
+          <td style="text-align: center; color: var(--text-muted);">${team.goal_difference > 0 ? `+${team.goal_difference}` : team.goal_difference}</td>
           <td style="text-align: center;"><strong style="color: var(--kfl-dark-blue);">${team.points}</strong></td>
         </tr>
       `).join('');
@@ -234,43 +234,6 @@ function renderHomeMatchesList() {
   }
 
   container.innerHTML = list.slice(0, 3).map(m => renderMatchCard(m)).join('');
-}
-
-function renderHighlightCard(h) {
-  const matchInfo = h.match ? `${h.match.home_team?.short_name || ''} vs ${h.match.away_team?.short_name || ''}` : '';
-  const duration = h.duration_seconds ? formatDuration(h.duration_seconds) : '';
-  const thumb = h.thumbnail_url || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80';
-
-  return `
-    <div class="card card-interactive" onclick="openVideoModal('${h.video_url}', '${escapeHtml(h.title)}')">
-      <div style="position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: var(--radius-sm); background: #000;">
-        <img src="${thumb}" alt="${escapeHtml(h.title)}" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85;">
-        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--kfl-dark-blue); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;">
-            재생
-          </div>
-        </div>
-        ${duration ? `<span style="position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; padding: 2px 5px; border-radius: 3px;">${duration}</span>` : ''}
-      </div>
-      <div style="padding-top: 8px;">
-        ${matchInfo ? `<span style="font-size: var(--text-2xs); color: var(--kfl-dark-blue); font-weight: 700;">${matchInfo}</span>` : ''}
-        <h4 style="margin: 2px 0 0 0; font-size: var(--text-xs); font-weight: 700; line-height: 1.4;">${h.title}</h4>
-      </div>
-    </div>
-  `;
-}
-
-function openVideoModal(url, title) {
-  const embedUrl = getYouTubeEmbedUrl(url);
-  showModal({
-    title: title || '하이라이트 영상',
-    content: `
-      <div style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-md); overflow: hidden; background: #000;">
-        <iframe src="${embedUrl}" title="${title}" style="width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    `,
-    id: 'highlight-video-modal'
-  });
 }
 
 // Expose tab switcher
