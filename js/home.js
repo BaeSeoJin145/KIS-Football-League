@@ -197,9 +197,9 @@ function renderHeroMatchCard(match, isLive = false, isFinished = false) {
       </div>
 
       <div class="hero-match-teams">
-        <!-- Home Team -->
+        <!-- Team 1 -->
         <div style="text-align: right;">
-          <div class="hero-team-name">${home.name || '홈팀'}</div>
+          <div class="hero-team-name">${home.name || '팀 1'}</div>
         </div>
 
         <!-- Score or Kick-off -->
@@ -218,9 +218,9 @@ function renderHeroMatchCard(match, isLive = false, isFinished = false) {
           `}
         </div>
 
-        <!-- Away Team -->
+        <!-- Team 2 -->
         <div style="text-align: left;">
-          <div class="hero-team-name">${away.name || '원정팀'}</div>
+          <div class="hero-team-name">${away.name || '팀 2'}</div>
         </div>
       </div>
 

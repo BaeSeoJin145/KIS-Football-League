@@ -274,7 +274,7 @@ function setupFixtureManagement() {
       const status = document.getElementById('fixture-status').value || 'scheduled';
 
       if (home_team_id === away_team_id) {
-        showToast({ title: '입력 오류', message: '홈팀과 원정팀이 같을 수 없습니다.', type: 'warning' });
+        showToast({ title: '입력 오류', message: '동일한 두 팀을 선택할 수 없습니다.', type: 'warning' });
         return;
       }
 
@@ -376,7 +376,7 @@ function renderMatchesTable(matches) {
   tbody.innerHTML = matches.map(m => `
     <tr>
       <td>${m.round || 1}R</td>
-      <td><strong>${m.home_team?.name || '홈팀'} vs ${m.away_team?.name || '원정팀'}</strong></td>
+      <td><strong>${m.home_team?.name || '팀 1'} vs ${m.away_team?.name || '팀 2'}</strong></td>
       <td style="text-align: center; font-weight: 700;">${m.home_score} : ${m.away_score}</td>
       <td>${getStatusBadge(m.status, m.minute)}</td>
       <td style="font-size: var(--text-xs); color: var(--text-muted);">${formatDateShort(m.match_date)} ${formatTime(m.match_date)} (${m.venue || ''})</td>

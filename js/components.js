@@ -408,11 +408,11 @@ function renderMatchCard(match, options = {}) {
       </div>
       <div class="match-card-body">
         <div class="match-team home">
-          <span>${homeTeam.name || '홈팀'}</span>
+          <span>${homeTeam.name || '팀 1'}</span>
         </div>
         ${scoreHTML}
         <div class="match-team away">
-          <span>${awayTeam.name || '원정팀'}</span>
+          <span>${awayTeam.name || '팀 2'}</span>
         </div>
       </div>
       <div class="match-card-footer">

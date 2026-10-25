@@ -7,6 +7,10 @@
   <meta name="description" content="KFL 공식 리그 관리자 포털 - 팀, 경기 일정, 실시간 스코어, 이벤트, 선수 명단 관리">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f5f6fa">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/kis-watermark.png">
+  <link rel="apple-touch-icon" href="assets/kis-watermark.png">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -152,11 +156,11 @@
 
               <div class="grid grid-3 mb-md">
                 <div>
-                  <label for="fixture-home-select">홈팀 *</label>
+                  <label for="fixture-home-select">팀 1 *</label>
                   <select id="fixture-home-select" required></select>
                 </div>
                 <div>
-                  <label for="fixture-away-select">원정팀 *</label>
+                  <label for="fixture-away-select">팀 2 *</label>
                   <select id="fixture-away-select" required></select>
                 </div>
                 <div>
@@ -202,7 +206,7 @@
               <thead>
                 <tr>
                   <th style="width: 50px;">라운드</th>
-                  <th>홈팀 vs 원정팀</th>
+                  <th>대진 (팀 1 vs 팀 2)</th>
                   <th style="text-align: center; width: 70px;">스코어</th>
                   <th style="width: 80px;">상태</th>
                   <th>일시 · 장소</th>

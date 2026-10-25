@@ -85,9 +85,9 @@ function renderScoreboard(match) {
       </div>
 
       <div class="hero-match-teams">
-        <!-- Home -->
+        <!-- Team 1 -->
         <div style="text-align: right;">
-          <h2 style="margin: 0; font-size: var(--text-2xl); font-weight: 800;">${home.name || '홈팀'}</h2>
+          <h2 style="margin: 0; font-size: var(--text-2xl); font-weight: 800;">${home.name || '팀 1'}</h2>
         </div>
 
         <!-- Score / Time -->
@@ -105,9 +105,9 @@ function renderScoreboard(match) {
           `}
         </div>
 
-        <!-- Away -->
+        <!-- Team 2 -->
         <div style="text-align: left;">
-          <h2 style="margin: 0; font-size: var(--text-2xl); font-weight: 800;">${away.name || '원정팀'}</h2>
+          <h2 style="margin: 0; font-size: var(--text-2xl); font-weight: 800;">${away.name || '팀 2'}</h2>
         </div>
       </div>
     </div>
@@ -187,10 +187,10 @@ function renderLineups(lineups, match) {
 
   container.innerHTML = `
     <div class="grid grid-2" style="gap: var(--spacing-xl);">
-      <!-- Home Lineup -->
+      <!-- Team 1 Lineup -->
       <div class="card" style="padding: var(--spacing-lg);">
         <h3 style="margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
-          <span>${match.home_team?.name || '홈팀'}</span>
+          <span>${match.home_team?.name || '팀 1'}</span>
           <span class="badge badge-primary">선발 11명</span>
         </h3>
         <div class="lineup-list" style="margin-top: var(--spacing-md);">
@@ -204,10 +204,10 @@ function renderLineups(lineups, match) {
         ` : ''}
       </div>
 
-      <!-- Away Lineup -->
+      <!-- Team 2 Lineup -->
       <div class="card" style="padding: var(--spacing-lg);">
         <h3 style="margin-top: 0; display: flex; align-items: center; justify-content: space-between;">
-          <span>${match.away_team?.name || '원정팀'}</span>
+          <span>${match.away_team?.name || '팀 2'}</span>
           <span class="badge badge-neutral">선발 11명</span>
         </h3>
         <div class="lineup-list" style="margin-top: var(--spacing-md);">
