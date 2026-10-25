@@ -18,12 +18,16 @@ function isSupabaseConfigured() {
   // Must have a real Supabase URL (not placeholder)
   if (!url || url.includes('YOUR_PROJECT') || url.includes('your-project')) return false;
 
-  // Must have a valid anon key:
-  // - Not a placeholder
-  // - Must be a real Supabase JWT (starts with 'eyJ' and is long enough)
+  // Must have a valid anon key (not placeholder)
   if (!key || key.includes('YOUR_ANON_KEY') || key.includes('your-publishable')) return false;
-  if (!key.startsWith('eyJ') || key.length < 100) {
-    console.info('[KFL] Supabase anon key does not appear to be a valid JWT. Running in Local Demo Mode.');
+
+  // Accept both formats:
+  // - Legacy JWT keys: start with 'eyJ' (base64 encoded JSON)
+  // - New publishable keys: start with 'sb_publishable_'
+  const isLegacyJWT = key.startsWith('eyJ') && key.length >= 100;
+  const isPublishableKey = key.startsWith('sb_publishable_') && key.length >= 20;
+  if (!isLegacyJWT && !isPublishableKey) {
+    console.info('[KFL] Supabase anon key format not recognized. Running in Local Demo Mode.');
     return false;
   }
 
@@ -96,7 +100,7 @@ async function fetchSeasons() {
         .from('seasons')
         .select('*')
         .order('year', { ascending: false });
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
     } catch (e) {
       console.warn('Supabase fetchSeasons error, using mock:', e);
     }
@@ -134,7 +138,7 @@ async function fetchTeams(seasonId) {
       let query = _supabase.from('teams').select('*').order('name');
       if (seasonId) query = query.eq('season_id', seasonId);
       const { data, error } = await query;
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
     } catch (e) {
       console.warn('Supabase fetchTeams error, using mock:', e);
     }
@@ -172,7 +176,7 @@ async function fetchPlayers(teamId) {
       let query = _supabase.from('players').select('*, teams(id, name, short_name, color)').order('number');
       if (teamId) query = query.eq('team_id', teamId);
       const { data, error } = await query;
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
     } catch (e) {
       console.warn('Supabase fetchPlayers error, using mock:', e);
     }
@@ -236,7 +240,7 @@ async function fetchMatches(filters = {}) {
       if (filters.dateTo) query = query.lte('match_date', filters.dateTo);
 
       const { data, error } = await query;
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
     } catch (e) {
       console.warn('Supabase fetchMatches error, using mock:', e);
     }
@@ -380,7 +384,7 @@ async function fetchMatchHighlights(matchId) {
       
       if (matchId) query = query.eq('match_id', matchId);
       const { data, error } = await query;
-      if (!error && data && data.length > 0) return data;
+      if (!error && data) return data;
     } catch (e) {
       console.warn('Supabase fetchMatchHighlights error, using mock:', e);
     }
