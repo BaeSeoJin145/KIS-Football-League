@@ -11,13 +11,23 @@ let _initPromise = null;
  * Checks whether valid Supabase credentials have been configured
  */
 function isSupabaseConfigured() {
-  return (
-    typeof KFL_CONFIG !== 'undefined' &&
-    KFL_CONFIG.SUPABASE_URL &&
-    !KFL_CONFIG.SUPABASE_URL.includes('YOUR_PROJECT') &&
-    KFL_CONFIG.SUPABASE_ANON_KEY &&
-    !KFL_CONFIG.SUPABASE_ANON_KEY.includes('YOUR_ANON_KEY')
-  );
+  if (typeof KFL_CONFIG === 'undefined') return false;
+  const url = KFL_CONFIG.SUPABASE_URL || '';
+  const key = KFL_CONFIG.SUPABASE_ANON_KEY || '';
+
+  // Must have a real Supabase URL (not placeholder)
+  if (!url || url.includes('YOUR_PROJECT') || url.includes('your-project')) return false;
+
+  // Must have a valid anon key:
+  // - Not a placeholder
+  // - Must be a real Supabase JWT (starts with 'eyJ' and is long enough)
+  if (!key || key.includes('YOUR_ANON_KEY') || key.includes('your-publishable')) return false;
+  if (!key.startsWith('eyJ') || key.length < 100) {
+    console.info('[KFL] Supabase anon key does not appear to be a valid JWT. Running in Local Demo Mode.');
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -492,10 +502,14 @@ function onAuthStateChange(callback) {
 
 async function upsertMatch(match) {
   if (isSupabaseConfigured() && _supabase) {
-    const payload = { ...match, updated_at: new Date().toISOString() };
-    const { data, error } = await _supabase.from('matches').upsert(payload).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const payload = { ...match, updated_at: new Date().toISOString() };
+      const { data, error } = await _supabase.from('matches').upsert(payload).select().single();
+      if (!error && data) return data;
+      console.warn('Supabase upsertMatch error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase upsertMatch exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   const index = store.matches.findIndex(m => m.id === match.id);
@@ -514,9 +528,13 @@ async function upsertMatch(match) {
 
 async function upsertMatchEvent(event) {
   if (isSupabaseConfigured() && _supabase) {
-    const { data, error } = await _supabase.from('match_events').upsert(event).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await _supabase.from('match_events').upsert(event).select().single();
+      if (!error && data) return data;
+      console.warn('Supabase upsertMatchEvent error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase upsertMatchEvent exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   event.id = event.id || 'ev-' + Date.now();
@@ -529,9 +547,13 @@ async function upsertMatchEvent(event) {
 
 async function upsertPlayer(player) {
   if (isSupabaseConfigured() && _supabase) {
-    const { data, error } = await _supabase.from('players').upsert(player).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await _supabase.from('players').upsert(player).select().single();
+      if (!error && data) return data;
+      console.warn('Supabase upsertPlayer error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase upsertPlayer exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   const index = store.players.findIndex(p => p.id === player.id);
@@ -547,9 +569,13 @@ async function upsertPlayer(player) {
 
 async function upsertTeam(team) {
   if (isSupabaseConfigured() && _supabase) {
-    const { data, error } = await _supabase.from('teams').upsert(team).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await _supabase.from('teams').upsert(team).select().single();
+      if (!error && data) return data;
+      console.warn('Supabase upsertTeam error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase upsertTeam exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   const index = store.teams.findIndex(t => t.id === team.id);
@@ -565,9 +591,13 @@ async function upsertTeam(team) {
 
 async function upsertHighlight(highlight) {
   if (isSupabaseConfigured() && _supabase) {
-    const { data, error } = await _supabase.from('match_highlights').upsert(highlight).select().single();
-    if (error) throw error;
-    return data;
+    try {
+      const { data, error } = await _supabase.from('match_highlights').upsert(highlight).select().single();
+      if (!error && data) return data;
+      console.warn('Supabase upsertHighlight error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase upsertHighlight exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   const index = store.highlights.findIndex(h => h.id === highlight.id);
@@ -583,9 +613,13 @@ async function upsertHighlight(highlight) {
 
 async function deleteTeam(teamId) {
   if (isSupabaseConfigured() && _supabase) {
-    const { error } = await _supabase.from('teams').delete().eq('id', teamId);
-    if (error) throw error;
-    return;
+    try {
+      const { error } = await _supabase.from('teams').delete().eq('id', teamId);
+      if (!error) return;
+      console.warn('Supabase deleteTeam error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase deleteTeam exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   store.teams = store.teams.filter(t => t.id !== teamId);
@@ -596,9 +630,13 @@ async function deleteTeam(teamId) {
 
 async function deleteMatch(matchId) {
   if (isSupabaseConfigured() && _supabase) {
-    const { error } = await _supabase.from('matches').delete().eq('id', matchId);
-    if (error) throw error;
-    return;
+    try {
+      const { error } = await _supabase.from('matches').delete().eq('id', matchId);
+      if (!error) return;
+      console.warn('Supabase deleteMatch error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase deleteMatch exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   store.matches = store.matches.filter(m => m.id !== matchId);
@@ -608,9 +646,13 @@ async function deleteMatch(matchId) {
 
 async function deletePlayer(playerId) {
   if (isSupabaseConfigured() && _supabase) {
-    const { error } = await _supabase.from('players').delete().eq('id', playerId);
-    if (error) throw error;
-    return;
+    try {
+      const { error } = await _supabase.from('players').delete().eq('id', playerId);
+      if (!error) return;
+      console.warn('Supabase deletePlayer error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase deletePlayer exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   store.players = store.players.filter(p => p.id !== playerId);
@@ -619,9 +661,13 @@ async function deletePlayer(playerId) {
 
 async function deleteMatchEvent(eventId) {
   if (isSupabaseConfigured() && _supabase) {
-    const { error } = await _supabase.from('match_events').delete().eq('id', eventId);
-    if (error) throw error;
-    return;
+    try {
+      const { error } = await _supabase.from('match_events').delete().eq('id', eventId);
+      if (!error) return;
+      console.warn('Supabase deleteMatchEvent error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase deleteMatchEvent exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   store.events = store.events.filter(e => e.id !== eventId);
@@ -630,9 +676,13 @@ async function deleteMatchEvent(eventId) {
 
 async function deleteHighlight(highlightId) {
   if (isSupabaseConfigured() && _supabase) {
-    const { error } = await _supabase.from('match_highlights').delete().eq('id', highlightId);
-    if (error) throw error;
-    return;
+    try {
+      const { error } = await _supabase.from('match_highlights').delete().eq('id', highlightId);
+      if (!error) return;
+      console.warn('Supabase deleteHighlight error, using local:', error);
+    } catch (e) {
+      console.warn('Supabase deleteHighlight exception, using local:', e);
+    }
   }
   const store = getLocalStore();
   store.highlights = store.highlights.filter(h => h.id !== highlightId);
