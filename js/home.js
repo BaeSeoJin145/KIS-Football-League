@@ -57,9 +57,13 @@ async function loadHomePageData() {
         heroContainer.innerHTML = renderHeroMatchCard(homeFinishedMatches[0], false, true);
       } else {
         heroContainer.innerHTML = `
-          <div class="card empty-state">
-            <h3 class="empty-state-title">등록된 경기가 없습니다</h3>
-            <p class="empty-state-text">관리자 페이지에서 경기 일정을 추가해주세요.</p>
+          <div class="card empty-state" style="padding: 32px 20px; background: #ffffff; border: 2px solid #151515; box-shadow: var(--shadow-bento); border-radius: var(--radius-lg); text-align: center;">
+            <h3 class="empty-state-title" style="font-size: var(--text-base); font-weight: 800; color: #151515; margin-bottom: 4px;">등록된 경기 일정이 없습니다</h3>
+            <p class="empty-state-text" style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: 16px;">관리자 페이지에서 경기 일정을 등록해주세요.</p>
+            <div class="flex justify-center gap-xs">
+              <a href="admin.html" class="btn btn-sm btn-primary" style="font-weight: 700;">경기 일정 등록</a>
+              <a href="standings.html" class="btn btn-sm btn-outline">순위표 확인</a>
+            </div>
           </div>
         `;
       }
@@ -84,16 +88,48 @@ async function loadHomePageData() {
     // 4. Bento Tile 4: Mini Standings Table (TOP 4)
     if (miniTableBody) {
       const top4 = standings.slice(0, 4);
-      miniTableBody.innerHTML = top4.map((team, idx) => `
-        <tr class="table-row-hover" onclick="location.href='standings.html'">
-          <td style="font-weight: 800; color: ${idx === 0 ? 'var(--kfl-mint)' : 'inherit'}; text-align: center;">${idx + 1}</td>
-          <td><strong style="color: ${idx === 0 ? '#ffffff' : 'var(--text-primary)'};">${team.team_name}</strong></td>
-          <td style="text-align: center;">${team.played}</td>
-          <td style="text-align: center; color: var(--kfl-base-blue); font-weight: 700;">${team.won}</td>
-          <td style="text-align: center; color: var(--text-muted);">${team.goal_difference > 0 ? `+${team.goal_difference}` : team.goal_difference}</td>
-          <td style="text-align: center;"><strong style="color: var(--kfl-dark-blue);">${team.points}</strong></td>
-        </tr>
-      `).join('');
+      if (top4.length === 0) {
+        miniTableBody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 24px; color: var(--text-muted); font-size: var(--text-xs);">
+              등록된 구단 또는 순위 데이터가 없습니다.
+            </td>
+          </tr>
+        `;
+      } else {
+        miniTableBody.innerHTML = top4.map((team, idx) => {
+          const rankClass = idx === 0 ? 'rank-badge-1' : idx === 1 ? 'rank-badge-2' : idx === 2 ? 'rank-badge-3' : 'rank-badge-normal';
+          const teamColor = team.color || (idx === 0 ? 'var(--kfl-base-blue)' : '#64748b');
+          const gdColor = team.goal_difference > 0 ? 'var(--kfl-base-blue)' : team.goal_difference < 0 ? '#ef4444' : 'var(--text-muted)';
+          const isFirst = idx === 0;
+
+          return `
+            <tr class="table-row-hover" onclick="location.href='standings.html'">
+              <td style="text-align: center; width: 34px;">
+                <span class="rank-badge ${rankClass}">${idx + 1}</span>
+              </td>
+              <td>
+                <div class="flex items-center">
+                  <span class="team-dot" style="background: ${teamColor};"></span>
+                  <strong style="color: ${isFirst ? 'var(--kfl-dark-blue)' : '#1e293b'}; font-weight: ${isFirst ? '800' : '700'};">
+                    ${team.team_name}
+                  </strong>
+                </div>
+              </td>
+              <td style="text-align: center; font-weight: 600; color: #475569;">${team.played}</td>
+              <td style="text-align: center; color: var(--kfl-base-blue); font-weight: 700;">${team.won}</td>
+              <td style="text-align: center; color: ${gdColor}; font-weight: 600;">
+                ${team.goal_difference > 0 ? `+${team.goal_difference}` : team.goal_difference}
+              </td>
+              <td style="text-align: center;">
+                <span class="pts-badge ${isFirst ? 'pts-badge-gold' : ''}">
+                  ${team.points}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
     }
 
     // 5. Bento Tile 5: Top Scorers (Golden Boot)
@@ -153,11 +189,11 @@ function renderHeroMatchCard(match, isLive = false, isFinished = false) {
       <div class="hero-match-header">
         <div class="flex items-center gap-xs">
           ${getStatusBadge(match.status, match.minute)}
-          <span style="font-size: var(--text-2xs); color: rgba(255, 255, 255, 0.78); font-weight: 600;">
+          <span style="font-size: var(--text-2xs); color: var(--text-muted); font-weight: 700;">
             ${match.round ? `${match.round}라운드` : ''} · ${match.venue || 'KIS 메인 스타디움'}
           </span>
         </div>
-        <a href="match-detail.html?id=${match.id}" class="btn btn-sm btn-outline">경기 센터 →</a>
+        <a href="match-detail.html?id=${match.id}" class="btn btn-sm btn-outline" style="border-width: 1.5px; font-weight: 700;">경기 센터 →</a>
       </div>
 
       <div class="hero-match-teams">
@@ -169,13 +205,13 @@ function renderHeroMatchCard(match, isLive = false, isFinished = false) {
         <!-- Score or Kick-off -->
         <div style="padding: 0 16px;">
           ${isScheduled ? `
-            <div style="font-size: var(--text-2xs); color: rgba(255, 255, 255, 0.72); margin-bottom: 2px;">KICK OFF</div>
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 800; letter-spacing: 0.05em; margin-bottom: 2px;">KICK OFF</div>
             <div class="hero-score-box">${formatTime(match.match_date)}</div>
-            <div style="font-size: var(--text-2xs); color: rgba(255, 255, 255, 0.72); margin-top: 2px;">${formatDate(match.match_date, { month: 'numeric', day: 'numeric', weekday: 'short' })}</div>
+            <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">${formatDate(match.match_date, { month: 'numeric', day: 'numeric', weekday: 'short' })}</div>
           ` : `
             <div class="hero-score-box">
               <span id="hero-home-score">${match.home_score}</span>
-              <span style="color: var(--kfl-mint); font-size: var(--text-2xl); font-weight: 300;">:</span>
+              <span style="color: var(--kfl-base-blue); font-size: var(--text-3xl); font-weight: 800; margin: 0 4px;">:</span>
               <span id="hero-away-score">${match.away_score}</span>
             </div>
             <div style="margin-top: 4px;">${getStatusBadge(match.status, match.minute)}</div>

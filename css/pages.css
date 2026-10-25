@@ -4,13 +4,66 @@
 
 /* ── Hero Match Banner (Bento Card) ── */
 .hero-match-banner {
-  background: #eef0fa;
+  background: #f8fafc;
   color: var(--text-primary);
-  border: 3px solid #151515;
-  border-radius: var(--radius-xl);
+  border: 2px solid #151515;
+  border-radius: var(--radius-lg);
   padding: 24px;
   position: relative;
-  box-shadow: 6px 6px 0 #151515;
+  box-shadow: 4px 4px 0 #151515;
+}
+
+/* ── Bento Leader Tile (1st Place Spotlight) ── */
+#bento-leader-tile {
+  background: var(--bg-card);
+  border-top: 4px solid var(--kfl-base-blue) !important;
+}
+
+/* ── Segmented Control Tabs (Matches Switcher) ── */
+.segmented-control {
+  display: inline-flex;
+  align-items: center;
+  background: #e2e8f0;
+  border: 1.5px solid #151515;
+  padding: 2px;
+  border-radius: 4px;
+  gap: 2px;
+}
+
+.segmented-control .segment-btn {
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 2px;
+  color: #475569;
+  background: transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.segmented-control .segment-btn.active {
+  background: #151515;
+  color: #ffffff;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.segmented-control .segment-btn:hover:not(.active) {
+  color: #0f172a;
+}
+
+/* Section Header Bar */
+.section-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-indicator {
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: var(--kfl-base-blue);
+  border-radius: 2px;
 }
 
 .hero-match-header {

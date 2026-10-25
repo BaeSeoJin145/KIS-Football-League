@@ -24,14 +24,16 @@
       
       <!-- Top Title Bar -->
       <div class="flex justify-between items-center mb-md" style="flex-wrap: wrap; gap: var(--spacing-sm);">
-        <div class="flex items-center gap-sm">
-          <span class="badge badge-mint">2026 SPRING</span>
-          <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0; letter-spacing: -0.02em;">KIS FOOTBALL LEAGUE</h1>
+        <div>
+          <div class="flex items-center gap-xs mb-2xs">
+            <span class="badge badge-mint" style="font-size: 10.5px; font-weight: 800; letter-spacing: 0.05em;">2026</span>
+          </div>
+          <h1 style="font-size: 1.75rem; font-weight: 850; margin: 0; letter-spacing: -0.03em; color: #111827;">KIS FOOTBALL LEAGUE</h1>
         </div>
-        <div class="flex gap-xs">
-          <a href="matches.html" class="btn btn-sm btn-outline">경기 일정</a>
-          <a href="standings.html" class="btn btn-sm btn-outline">순위표</a>
-          <a href="admin.html" class="btn btn-sm btn-primary">관리자 콘솔</a>
+        <div class="flex gap-xs items-center">
+          <a href="matches.html" class="btn btn-sm btn-outline" style="border-width: 1.5px; font-weight: 700;">경기 일정</a>
+          <a href="standings.html" class="btn btn-sm btn-outline" style="border-width: 1.5px; font-weight: 700;">순위표</a>
+          <a href="admin.html" class="btn btn-sm btn-primary" style="font-weight: 800; box-shadow: 2px 2px 0 #151515;">관리자 콘솔</a>
         </div>
       </div>
 
@@ -45,20 +47,20 @@
         <div class="bento-card col-span-4 flex flex-col justify-between" id="bento-leader-tile">
           <div>
             <div class="flex justify-between items-center mb-sm">
-              <span class="badge badge-yellow">LEAGUE LEADER</span>
-              <span style="font-size: var(--text-2xs); color: var(--text-muted);">실시간 기준</span>
+              <span class="badge badge-yellow" style="font-weight: 800; font-size: 10.5px;">LEAGUE LEADER</span>
+              <span style="font-size: var(--text-2xs); color: var(--text-muted); font-weight: 600;">실시간 집계</span>
             </div>
-            <div style="font-size: var(--text-2xs); color: var(--text-muted); margin-top: 4px;">현재 1위 구단</div>
-            <h2 id="bento-leader-name" style="font-size: var(--text-2xl); font-weight: 800; color: var(--text-primary); margin: 2px 0 8px 0;">불사조 FC</h2>
-            <div class="flex gap-md" style="font-size: var(--text-xs); color: var(--text-secondary);">
-              <span>승점: <strong id="bento-leader-pts" style="color: var(--kfl-dark-blue); font-size: var(--text-base);">6</strong> pts</span>
-              <span>전적: <strong id="bento-leader-record" style="color: var(--text-primary);">2승 0무 0패</strong></span>
+            <div style="font-size: var(--text-2xs); color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">현재 1위 구단</div>
+            <h2 id="bento-leader-name" style="font-size: 1.65rem; font-weight: 900; color: #111827; margin: 4px 0 10px 0; letter-spacing: -0.02em;">불사조 FC</h2>
+            <div class="flex gap-md" style="font-size: var(--text-xs); color: var(--text-secondary); background: rgba(0,0,0,0.03); padding: 8px 12px; border-radius: 4px; border: 1px dashed #cbd5e1;">
+              <span>승점: <strong id="bento-leader-pts" style="color: var(--kfl-base-blue); font-size: 15px; font-weight: 900;">6</strong> pts</span>
+              <span>전적: <strong id="bento-leader-record" style="color: #1e293b; font-weight: 700;">2승 0무 0패</strong></span>
             </div>
           </div>
 
           <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: var(--text-2xs); color: var(--text-muted);">전체 순위 및 득실 확인</span>
-            <a href="standings.html" class="btn btn-sm btn-outline" style="border-radius: var(--radius-full);">순위표 →</a>
+            <span style="font-size: var(--text-2xs); color: var(--text-muted);">전체 순위 및 골득실</span>
+            <a href="standings.html" class="btn btn-sm btn-outline" style="border-width: 1.5px; font-weight: 700;">전체 순위표 →</a>
           </div>
         </div>
 
@@ -66,13 +68,13 @@
         <div class="bento-card col-span-7 flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-center mb-md">
-              <div class="flex items-center gap-xs">
-                <span style="color: var(--kfl-base-blue); font-weight: 800;">●</span>
-                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">경기 일정 및 결과</h3>
+              <div class="section-header-title">
+                <span class="section-indicator"></span>
+                <h3 style="margin: 0; font-size: 15.5px; font-weight: 800; color: #111827; letter-spacing: -0.01em;">경기 일정 및 결과</h3>
               </div>
-              <div class="flex gap-xs">
-                <button class="chip active" id="bento-tab-recent" onclick="switchHomeMatchesTab('recent')" style="padding: 3px 10px; font-size: 11px;">최근 결과</button>
-                <button class="chip" id="bento-tab-upcoming" onclick="switchHomeMatchesTab('upcoming')" style="padding: 3px 10px; font-size: 11px;">다음 일정</button>
+              <div class="segmented-control">
+                <button class="segment-btn active" id="bento-tab-recent" onclick="switchHomeMatchesTab('recent')">최근 결과</button>
+                <button class="segment-btn" id="bento-tab-upcoming" onclick="switchHomeMatchesTab('upcoming')">다음 일정</button>
               </div>
             </div>
 
@@ -80,8 +82,8 @@
             <div id="home-matches-display" class="flex flex-col gap-xs"></div>
           </div>
 
-          <div style="margin-top: 14px; text-align: right;">
-            <a href="matches.html" style="font-size: var(--text-xs); color: var(--kfl-dark-blue); font-weight: 600;">전체 일정 및 결과 더보기 →</a>
+          <div style="margin-top: 14px; text-align: right; padding-top: 8px; border-top: 1px solid var(--border-subtle);">
+            <a href="matches.html" style="font-size: var(--text-xs); color: var(--kfl-base-blue); font-weight: 700;">전체 일정 및 결과 더보기 →</a>
           </div>
         </div>
 
@@ -89,31 +91,31 @@
         <div class="bento-card col-span-5 flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-center mb-sm">
-              <div class="flex items-center gap-xs">
-                <span style="color: var(--kfl-base-blue); font-weight: 800;">■</span>
-                <h3 style="margin: 0; font-size: var(--text-base); font-weight: 700;">리그 순위 (TOP 4)</h3>
+              <div class="section-header-title">
+                <span class="section-indicator" style="background: #fff000;"></span>
+                <h3 style="margin: 0; font-size: 15.5px; font-weight: 800; color: #111827; letter-spacing: -0.01em;">리그 순위 (TOP 4)</h3>
               </div>
-              <a href="standings.html" style="font-size: var(--text-2xs); color: var(--text-muted);">전체보기</a>
+              <a href="standings.html" style="font-size: 11.5px; color: var(--kfl-base-blue); font-weight: 700;">전체보기 →</a>
             </div>
 
             <table class="table" style="font-size: var(--text-xs);">
               <thead>
                 <tr>
-                  <th style="width: 28px; text-align: center;">#</th>
+                  <th style="width: 34px; text-align: center;">순위</th>
                   <th>구단</th>
-                  <th style="text-align: center;">경기</th>
-                  <th style="text-align: center;">승</th>
-                  <th style="text-align: center;">득실</th>
-                  <th style="text-align: center;">승점</th>
+                  <th style="text-align: center; width: 40px;">경기</th>
+                  <th style="text-align: center; width: 36px;">승</th>
+                  <th style="text-align: center; width: 44px;">득실</th>
+                  <th style="text-align: center; width: 46px;">승점</th>
                 </tr>
               </thead>
               <tbody id="mini-standings-body"></tbody>
             </table>
           </div>
 
-          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: var(--text-2xs); color: var(--text-muted);">
-            <span>1위: 챔피언십 우승</span>
-            <a href="standings.html" style="color: var(--kfl-dark-blue);">상세 순위표 →</a>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted);">
+            <span style="font-weight: 600;">1위: 챔피언십 우승</span>
+            <a href="standings.html" style="color: var(--kfl-base-blue); font-weight: 700;">상세 순위표 →</a>
           </div>
         </div>
 

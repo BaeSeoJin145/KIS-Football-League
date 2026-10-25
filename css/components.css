@@ -215,7 +215,8 @@
   justify-content: space-between;
   align-items: center;
   font-size: var(--text-2xs);
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--text-muted);
+  font-weight: var(--weight-semibold);
   margin-bottom: 8px;
 }
 
@@ -276,29 +277,114 @@
 .table {
   width: 100%;
   font-size: var(--text-sm);
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .table th {
-  padding: 10px 12px;
+  padding: 8px 10px;
   text-align: left;
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-bold);
-  color: rgba(255, 255, 255, 0.72);
-  border-bottom: 1px solid var(--border-color);
+  font-size: 11px;
+  font-weight: 800;
+  color: #1e293b;
+  background: #f1f3f9;
+  border-top: 1.5px solid #151515;
+  border-bottom: 2px solid #151515;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.table th:first-child {
+  border-left: 1.5px solid #151515;
+}
+
+.table th:last-child {
+  border-right: 1.5px solid #151515;
 }
 
 .table td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 11px 10px;
+  border-bottom: 1px solid #e2e8f0;
   color: var(--text-primary);
+  vertical-align: middle;
 }
 
-.table-row-hover:hover {
-  background: var(--bg-card-hover);
+.table tbody tr:first-child td {
+  background: rgba(1, 1, 200, 0.02);
+}
+
+.table-row-hover:hover td {
+  background: #f8fafc !important;
   cursor: pointer;
+}
+
+/* Rank Badges */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.rank-badge-1 {
+  background: #fff000;
+  color: #151515;
+  border: 1.5px solid #151515;
+  box-shadow: 1px 1px 0 #151515;
+}
+
+.rank-badge-2 {
+  background: #e2e8f0;
+  color: #1e293b;
+  border: 1.5px solid #151515;
+}
+
+.rank-badge-3 {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #94a3b8;
+}
+
+.rank-badge-normal {
+  color: #64748b;
+  font-weight: 700;
+}
+
+/* Points Badge */
+.pts-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: rgba(1, 1, 200, 0.08);
+  color: var(--kfl-base-blue);
+  font-weight: 900;
+  font-size: 13px;
+  border-radius: 4px;
+  border: 1px solid rgba(1, 1, 200, 0.25);
+  min-width: 28px;
+  text-align: center;
+}
+
+.pts-badge-gold {
+  background: #fff000;
+  color: #151515;
+  border: 1.5px solid #151515;
+  box-shadow: 1px 1px 0 #151515;
+}
+
+/* Team Color Dot */
+.team-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .standings-form {

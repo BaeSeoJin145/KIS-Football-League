@@ -61,28 +61,39 @@ function renderStandingsTable() {
 
   tbody.innerHTML = standings.map((item, idx) => {
     const isFirst = idx === 0;
-    const isChampionsZone = idx < 2;
-    const rankColor = isFirst ? 'var(--color-primary)' : isChampionsZone ? 'var(--kfl-dark-blue)' : 'var(--text-muted)';
+    const rankClass = idx === 0 ? 'rank-badge-1' : idx === 1 ? 'rank-badge-2' : idx === 2 ? 'rank-badge-3' : 'rank-badge-normal';
+    const teamColor = item.color || (idx === 0 ? 'var(--kfl-base-blue)' : '#64748b');
 
     return `
       <tr class="table-row-hover">
-        <td style="font-weight: 800; color: ${rankColor}; font-size: var(--text-base); text-align: center;">${idx + 1}</td>
+        <td style="text-align: center; width: 44px;">
+          <span class="rank-badge ${rankClass}">${idx + 1}</span>
+        </td>
         <td>
-          <div>
-            <strong style="font-size: var(--text-sm);">${item.name}</strong>
-            ${item.coach ? `<div style="font-size: var(--text-xs); color: var(--text-muted);">${item.coach}</div>` : ''}
+          <div class="flex items-center">
+            <span class="team-dot" style="background: ${teamColor};"></span>
+            <div>
+              <strong style="font-size: var(--text-sm); color: ${isFirst ? 'var(--kfl-dark-blue)' : '#1e293b'}; font-weight: ${isFirst ? '800' : '700'};">
+                ${item.name}
+              </strong>
+              ${item.coach ? `<div style="font-size: var(--text-xs); color: var(--text-muted);">${item.coach}</div>` : ''}
+            </div>
           </div>
         </td>
-        <td style="text-align: center; font-weight: 600;">${item.played}</td>
+        <td style="text-align: center; font-weight: 600; color: #475569;">${item.played}</td>
         <td style="text-align: center; color: var(--kfl-base-blue); font-weight: 700;">${item.won}</td>
-        <td style="text-align: center; color: #776b00; font-weight: 600;">${item.drawn}</td>
-        <td style="text-align: center; color: #e74c3c; font-weight: 600;">${item.lost}</td>
+        <td style="text-align: center; color: #854d0e; font-weight: 600;">${item.drawn}</td>
+        <td style="text-align: center; color: #ef4444; font-weight: 600;">${item.lost}</td>
         <td style="text-align: center; color: var(--text-muted);">${item.goals_for}</td>
         <td style="text-align: center; color: var(--text-muted);">${item.goals_against}</td>
-        <td style="text-align: center; font-weight: 700; color: ${item.goal_diff > 0 ? 'var(--kfl-base-blue)' : item.goal_diff < 0 ? '#e74c3c' : 'inherit'};">
+        <td style="text-align: center; font-weight: 700; color: ${item.goal_diff > 0 ? 'var(--kfl-base-blue)' : item.goal_diff < 0 ? '#ef4444' : 'var(--text-muted)'};">
           ${item.goal_diff > 0 ? `+${item.goal_diff}` : item.goal_diff}
         </td>
-        <td style="text-align: center;"><strong style="font-size: var(--text-lg); color: var(--color-primary); font-weight: 900;">${item.points}</strong></td>
+        <td style="text-align: center;">
+          <span class="pts-badge ${isFirst ? 'pts-badge-gold' : ''}">
+            ${item.points}
+          </span>
+        </td>
         <td class="hide-on-mobile" style="text-align: center;">
           ${renderFormGuide(item.form)}
         </td>

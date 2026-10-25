@@ -25,6 +25,33 @@ body {
   background-color: var(--bg-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Subtle Background Watermark (KIS Emblem) ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 85vw);
+  height: min(650px, 85vw);
+  background-image: url('../assets/kis-watermark.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main-content,
+#app-nav,
+#app-footer,
+.top-nav {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Typography ── */
