@@ -2,7 +2,7 @@
 // KFL Service Worker (PWA Offline & Caching)
 // ============================================
 
-const CACHE_NAME = 'kfl-app-v5';
+const CACHE_NAME = 'kfl-app-v6';
 const STATIC_ASSETS = [
   './',
   'index.html',

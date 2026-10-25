@@ -9,31 +9,31 @@ let _channels = [];
  * Subscribe to match updates (score changes, status changes)
  */
 function subscribeToMatches(onUpdate) {
-  try {
-    const sb = getSupabase();
-    
-    const channel = sb.channel('matches-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'matches' },
-        (payload) => {
-          console.log('[Realtime] Match update:', payload);
-          if (onUpdate) onUpdate('match', payload);
-          
-          // Update score display if match card exists
-          if (payload.new) {
-            updateMatchScoreUI(payload.new);
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      const channel = sb.channel('matches-realtime')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'matches' },
+          (payload) => {
+            console.log('[Realtime] Match update:', payload);
+            if (onUpdate) onUpdate('match', payload);
+
+            if (payload.new) {
+              updateMatchScoreUI(payload.new);
+            }
           }
-        }
-      )
-      .subscribe((status) => {
-        console.log('[Realtime] Matches subscription:', status);
-      });
-    
-    _channels.push(channel);
-    return channel;
-  } catch (err) {
-    console.warn('[Realtime] Failed to subscribe to matches:', err);
+        )
+        .subscribe((status) => {
+          console.log('[Realtime] Matches subscription:', status);
+        });
+
+      _channels.push(channel);
+      return channel;
+    } catch (err) {
+      console.warn('[Realtime] Failed to subscribe to matches:', err);
+    }
   }
 
   // Local demo fallback event listener
@@ -51,26 +51,27 @@ function subscribeToMatches(onUpdate) {
  * Subscribe to match events (goals, cards, etc.)
  */
 function subscribeToMatchEvents(onUpdate) {
-  try {
-    const sb = getSupabase();
-    
-    const channel = sb.channel('events-realtime')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'match_events' },
-        (payload) => {
-          console.log('[Realtime] Event update:', payload);
-          if (onUpdate) onUpdate('event', payload);
-        }
-      )
-      .subscribe((status) => {
-        console.log('[Realtime] Events subscription:', status);
-      });
-    
-    _channels.push(channel);
-    return channel;
-  } catch (err) {
-    console.warn('[Realtime] Failed to subscribe to events:', err);
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      const channel = sb.channel('events-realtime')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'match_events' },
+          (payload) => {
+            console.log('[Realtime] Event update:', payload);
+            if (onUpdate) onUpdate('event', payload);
+          }
+        )
+        .subscribe((status) => {
+          console.log('[Realtime] Events subscription:', status);
+        });
+
+      _channels.push(channel);
+      return channel;
+    } catch (err) {
+      console.warn('[Realtime] Failed to subscribe to events:', err);
+    }
   }
 
   const localHandler = (e) => {
@@ -84,44 +85,45 @@ function subscribeToMatchEvents(onUpdate) {
  * Subscribe to a specific match (for match detail page)
  */
 function subscribeToMatch(matchId, onUpdate) {
-  try {
-    const sb = getSupabase();
-    
-    const channel = sb.channel(`match-${matchId}`)
-      .on(
-        'postgres_changes',
-        { 
-          event: '*', 
-          schema: 'public', 
-          table: 'matches',
-          filter: `id=eq.${matchId}`
-        },
-        (payload) => {
-          console.log('[Realtime] Match detail update:', payload);
-          if (onUpdate) onUpdate('match', payload);
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'match_events',
-          filter: `match_id=eq.${matchId}`
-        },
-        (payload) => {
-          console.log('[Realtime] Match event update:', payload);
-          if (onUpdate) onUpdate('event', payload);
-        }
-      )
-      .subscribe((status) => {
-        console.log(`[Realtime] Match ${matchId} subscription:`, status);
-      });
-    
-    _channels.push(channel);
-    return channel;
-  } catch (err) {
-    console.warn(`[Realtime] Failed to subscribe to match ${matchId}:`, err);
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      const channel = sb.channel(`match-${matchId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'matches',
+            filter: `id=eq.${matchId}`
+          },
+          (payload) => {
+            console.log('[Realtime] Match detail update:', payload);
+            if (onUpdate) onUpdate('match', payload);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'match_events',
+            filter: `match_id=eq.${matchId}`
+          },
+          (payload) => {
+            console.log('[Realtime] Match event update:', payload);
+            if (onUpdate) onUpdate('event', payload);
+          }
+        )
+        .subscribe((status) => {
+          console.log(`[Realtime] Match ${matchId} subscription:`, status);
+        });
+
+      _channels.push(channel);
+      return channel;
+    } catch (err) {
+      console.warn(`[Realtime] Failed to subscribe to match ${matchId}:`, err);
+    }
   }
 
   const localMatchHandler = (e) => {
@@ -176,11 +178,15 @@ function updateMatchScoreUI(matchData) {
  */
 function unsubscribeAll() {
   const sb = getSupabase();
+  if (!sb) {
+    _channels = [];
+    return;
+  }
   _channels.forEach(channel => {
     try {
       sb.removeChannel(channel);
-    } catch (e) {
-      // ignore
+    } catch (err) {
+      console.warn('[Realtime] Failed to remove channel:', err);
     }
   });
   _channels = [];

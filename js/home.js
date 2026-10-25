@@ -98,7 +98,9 @@ async function loadHomePageData() {
 
     // 5. Bento Tile 5: Top Scorers (Golden Boot)
     if (topScorersContainer) {
-      const scorers = calculateTopScorers(events, 3);
+      const scorers = typeof calculateTopScorers === 'function'
+        ? calculateTopScorers(events, 3)
+        : [];
       if (scorers.length > 0) {
         topScorersContainer.innerHTML = scorers.map((s, idx) => {
           const rankBadge = idx === 0 ? 'badge-yellow' : idx === 1 ? 'badge-mint' : 'badge-neutral';
