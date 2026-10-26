@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>리그 갤러리 | KFL</title>
+  <meta name="description" content="KFL 경기 현장 포토 및 팀별 사진 갤러리">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f5f6fa">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/kis-watermark.png">
+  <link rel="apple-touch-icon" href="assets/kis-watermark.png">
+
+  <!-- Open Graph / URL Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="리그 갤러리 | KFL">
+  <meta property="og:description" content="KFL 경기 현장 포토 및 팀별 사진 갤러리">
+  <meta property="og:image" content="https://baeseojin145.github.io/KIS-Football-League/assets/kis-watermark.png">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Header / Nav -->
+  <div id="app-nav"></div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <section style="margin-bottom: var(--spacing-lg);">
+        <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: var(--spacing-sm);">
+          <div>
+            <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0;">리그 갤러리</h1>
+            <p style="font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px;">경기 현장 포토 및 팀별 사진 모음</p>
+          </div>
+          <div class="flex items-center gap-xs">
+            <div id="gallery-count-badge" class="badge badge-neutral">불러오는 중...</div>
+            <button id="gallery-refresh-btn" class="btn btn-sm btn-outline" title="구글 드라이브 최신 사진 새로고침">
+              <span>새로고침</span>
+            </button>
+            <a id="gallery-open-drive-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary hide-on-mobile">
+              <span id="gallery-drive-btn-text">구글 드라이브 열기</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter Controls Bar -->
+      <div class="card mb-lg">
+        <div class="mb-sm">
+          <div style="font-size: var(--text-xs); color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">
+            팀 선택
+          </div>
+          <div id="gallery-team-filters" class="flex gap-xs" style="flex-wrap: wrap;">
+            <!-- 동적으로 구글 드라이브 폴더명 매칭 버튼 렌더링 -->
+            <button class="gallery-filter-btn active" data-team="all">전체</button>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center" style="border-top: 1px solid var(--border-color); padding-top: var(--spacing-sm); flex-wrap: wrap; gap: 8px;">
+          <input type="text" id="gallery-search-input" placeholder="사진 검색..." style="max-width: 260px; padding: 6px 12px; font-size: var(--text-xs);">
+          <div id="gallery-current-folder-hint" style="font-size: var(--text-2xs); color: var(--text-muted);">
+            구글 드라이브 <strong id="gallery-folder-name-label">KFL-Gallery</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid" id="gallery-grid-container">
+        <!-- JS로 동적 렌더링 -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div id="gallery-lightbox" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="사진 확대 보기">
+    <button id="lightbox-close-btn" class="gallery-lightbox-close" aria-label="닫기">✕</button>
+    <button id="lightbox-prev-btn" class="gallery-lightbox-prev" aria-label="이전 사진">‹</button>
+    <button id="lightbox-next-btn" class="gallery-lightbox-next" aria-label="다음 사진">›</button>
+    
+    <div class="gallery-lightbox-content">
+      <img id="lightbox-img" class="gallery-lightbox-img" src="" alt="확대 사진">
+      <div class="gallery-lightbox-caption">
+        <div>
+          <span id="lightbox-team-badge" class="badge badge-primary">12-1</span>
+          <strong id="lightbox-title" style="margin-left: 8px; font-size: var(--text-sm);">사진 이름</strong>
+          <span id="lightbox-date" style="font-size: var(--text-2xs); opacity: 0.7; margin-left: 8px;">날짜</span>
+        </div>
+        <div class="flex gap-xs">
+          <a id="lightbox-team-folder-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="color: #fff; border-color: rgba(255,255,255,0.4);">
+            팀 폴더 열기
+          </a>
+          <a id="lightbox-drive-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary">
+            구글 드라이브 원본
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="app-footer"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <div id="app-bottom-nav"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

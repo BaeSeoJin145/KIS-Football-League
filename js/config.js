@@ -65,6 +65,16 @@ const KFL_CONFIG = {
     DF: '수비수',
     MF: '미드필더',
     FW: '공격수'
+  },
+
+  // Google Drive Gallery
+  GOOGLE_DRIVE_GALLERY: {
+    // Google Apps Script 배포 URL (관리자 화면에서 설정하거나 여기에 입력)
+    WEBAPP_URL: '',
+    // KFL-Gallery 구글 드라이브 기본 공유 링크
+    ROOT_FOLDER_URL: '',
+    // 캐시 시간 (분)
+    CACHE_EXPIRY_MINUTES: 10
   }
 };
 
@@ -75,3 +85,5 @@ Object.freeze(KFL_CONFIG.MATCH_STATUS_LABELS);
 Object.freeze(KFL_CONFIG.EVENT_TYPES);
 Object.freeze(KFL_CONFIG.EVENT_TYPE_LABELS);
 Object.freeze(KFL_CONFIG.POSITION_LABELS);
+Object.freeze(KFL_CONFIG.GOOGLE_DRIVE_GALLERY);
+

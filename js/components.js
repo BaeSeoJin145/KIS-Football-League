@@ -33,6 +33,7 @@ function renderNav() {
           <a href="matches.html" class="nav-link ${page === 'matches' || page === 'match-detail' ? 'active' : ''}" id="nav-matches">경기 일정</a>
           <a href="standings.html" class="nav-link ${page === 'standings' ? 'active' : ''}" id="nav-standings">순위</a>
           <a href="players.html" class="nav-link ${page === 'players' ? 'active' : ''}" id="nav-players">선수</a>
+          <a href="gallery.html" class="nav-link ${page === 'gallery' ? 'active' : ''}" id="nav-gallery">갤러리</a>
           <a href="highlights.html" class="nav-link ${page === 'highlights' ? 'active' : ''}" id="nav-highlights">영상</a>
           <a href="admin.html" class="nav-link ${page === 'admin' ? 'active' : ''}" id="nav-admin">관리자</a>
         </div>
@@ -68,6 +69,9 @@ function renderBottomNav() {
         <a href="players.html" class="bottom-nav-item ${page === 'players' ? 'active' : ''}" id="bnav-players">
           <span class="bottom-nav-label">선수</span>
         </a>
+        <a href="gallery.html" class="bottom-nav-item ${page === 'gallery' ? 'active' : ''}" id="bnav-gallery">
+          <span class="bottom-nav-label">갤러리</span>
+        </a>
         <a href="highlights.html" class="bottom-nav-item ${page === 'highlights' ? 'active' : ''}" id="bnav-highlights">
           <span class="bottom-nav-label">영상</span>
         </a>
@@ -95,6 +99,8 @@ function renderFooter() {
             <a href="matches.html" class="footer-link">경기</a>
             <a href="standings.html" class="footer-link">순위</a>
             <a href="players.html" class="footer-link">선수</a>
+            <a href="gallery.html" class="footer-link">갤러리</a>
+            <a href="highlights.html" class="footer-link">영상</a>
             <a href="admin.html" class="footer-link">관리자</a>
           </div>
           <span class="footer-copy">${new Date().getFullYear()} KIS Football League. All rights reserved.</span>

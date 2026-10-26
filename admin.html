@@ -85,6 +85,7 @@
             <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-events">경기 이벤트</button>
             <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-players">선수 명단</button>
             <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-highlights">하이라이트</button>
+            <button class="btn btn-sm btn-ghost admin-nav-btn" data-admin-tab="adm-tab-gallery">구글 드라이브 갤러리</button>
           </div>
         </div>
 
@@ -406,6 +407,71 @@
               </thead>
               <tbody id="admin-highlights-table-body"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- 7. Google Drive Gallery Management Tab -->
+        <div id="adm-tab-gallery" class="admin-tab-pane">
+          <!-- Overview Card -->
+          <div class="card mb-lg">
+            <div class="flex justify-between items-center" style="flex-wrap: wrap; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+              <div>
+                <h3 style="margin: 0 0 4px 0; font-size: var(--text-base);">구글 드라이브 갤러리 연동</h3>
+                <p style="font-size: var(--text-xs); color: var(--text-muted); margin: 0;">
+                  구글 드라이브 상위 폴더(<code>KFL-Gallery</code>) 내 팀명 폴더(<code>12-1</code>, <code>12-2</code> 등)와 자동으로 매칭됩니다.
+                </p>
+              </div>
+              <div class="flex gap-xs">
+                <a href="gallery.html" target="_blank" class="btn btn-sm btn-outline">갤러리 페이지 보기 ↗</a>
+              </div>
+            </div>
+
+            <!-- Notice Box -->
+            <div style="background: rgba(1, 1, 200, 0.05); border: 2px solid var(--kfl-base-blue); border-radius: var(--radius-sm); padding: var(--spacing-md); margin-bottom: var(--spacing-md);">
+              <h4 style="margin: 0 0 6px 0; font-size: var(--text-xs); color: var(--kfl-base-blue); font-weight: 800;">
+                팀 폴더 추가 안내
+              </h4>
+              <p style="font-size: var(--text-xs); line-height: 1.6; margin: 0; color: var(--text-primary);">
+                구글 드라이브 <strong>KFL-Gallery</strong> 안에 새 팀 이름(예: <code>12-6</code>, <code>11-1</code> 등)으로 폴더를 만들고 사진을 넣으면, 웹사이트 코드를 수정할 필요 없이 <strong>갤러리 탭에 해당 팀 버튼이 자동으로 생성되고 사진이 표시</strong>됩니다.
+              </p>
+            </div>
+
+            <!-- API Configuration Form -->
+            <form id="admin-gallery-config-form">
+              <div class="mb-md">
+                <label for="gallery-webapp-url-input">Google Apps Script 배포 URL (Web App URL)</label>
+                <div class="flex gap-xs">
+                  <input type="url" id="gallery-webapp-url-input" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1;">
+                  <button type="submit" class="btn btn-sm btn-primary">연동 저장</button>
+                  <button type="button" id="gallery-config-reset-btn" class="btn btn-sm btn-outline">초기화</button>
+                </div>
+                <div style="font-size: var(--text-2xs); color: var(--text-muted); margin-top: 4px;">
+                  * 브라우저 로컬 저장소 및 설정에 저장되어 갤러리 페이지에서 자동으로 구글 드라이브 사진을 불러옵니다.
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Setup Guide Card -->
+          <div class="card mb-lg">
+            <h4 style="margin-top: 0; margin-bottom: var(--spacing-sm); font-size: var(--text-sm);">
+              구글 드라이브 자동 연동 가이드 (Google Apps Script)
+            </h4>
+            <ol style="font-size: var(--text-xs); line-height: 1.8; padding-left: 20px; margin-bottom: var(--spacing-md);">
+              <li><a href="https://script.google.com" target="_blank" rel="noopener noreferrer" style="color: var(--kfl-base-blue); font-weight: 700; text-decoration: underline;">Google Apps Script (script.google.com)</a>에 접속하여 <strong>[새 프로젝트]</strong>를 누릅니다.</li>
+              <li>아래의 코드를 복사하여 <code>Code.gs</code>에 그대로 붙여넣습니다.</li>
+              <li>코드 3번째 줄의 <code>ROOT_FOLDER_ID</code>에 내 드라이브 <strong>KFL-Gallery 폴더 링크의 ID</strong>를 넣습니다.</li>
+              <li>우측 상단 <strong>[배포] → [새 배포]</strong> 클릭 후 유형을 <strong>[웹 앱]</strong>으로 선택합니다.</li>
+              <li><strong>액세스 권한</strong>을 <strong>"모든 사용자"</strong>로 선택하고 [배포]를 누른 뒤, 나오는 <strong>웹 앱 URL</strong>을 위 입력창에 넣으면 연동이 완료됩니다.</li>
+            </ol>
+
+            <div class="flex justify-between items-center mb-xs">
+              <span style="font-size: var(--text-2xs); font-weight: 700; color: var(--text-muted);">연동 스크립트 코드:</span>
+              <button id="copy-gas-code-btn" type="button" class="btn btn-sm btn-outline" style="font-size: 11px; padding: 2px 8px;">
+                코드 복사
+              </button>
+            </div>
+            <pre id="gas-script-code" style="background: #111; color: #a5f3fc; padding: 12px; border-radius: var(--radius-sm); font-size: 11px; overflow-x: auto; max-height: 280px; border: 1px solid #333; line-height: 1.5;"></pre>
           </div>
         </div>
 
