@@ -18,7 +18,7 @@
  * 5. 유형: [웹 앱] 선택
  * 6. 액세스 권한: "모든 사용자(Anyone)" 로 설정하고 [배포] 클릭
  * 7. 생성된 "웹 앱 URL (https://script.google.com/macros/s/.../exec)" 복사
- * 8. KFL 웹사이트 [관리자] -> [구글 드라이브 갤러리] 탭의 URL 입력창에 붙여넣기!
+ * 8. 배포된 웹 앱 주소는 KFL 웹사이트 js/config.js의 GOOGLE_DRIVE_GALLERY 설정에 등록합니다.
  */
 
 function doGet(e) {
@@ -26,7 +26,7 @@ function doGet(e) {
   // 여기에 KFL-Gallery 폴더 ID를 입력하세요.
   // 예: "1AbCdEfGhIjKlMnOpQrStUvWxYz"
   // -------------------------------------------------------------
-  const ROOT_FOLDER_ID = "YOUR_KFL_GALLERY_FOLDER_ID_HERE";
+  const ROOT_FOLDER_ID = "12IuF-6r1qyvOZSxWcI7E-i_IKZAQTCyY";
 
   try {
     const rootFolder = DriveApp.getFolderById(ROOT_FOLDER_ID);

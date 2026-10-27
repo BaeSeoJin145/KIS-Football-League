@@ -859,126 +859,14 @@ window.openLiveControllerForMatch = openLiveControllerForMatch;
 
 // ── Google Drive Gallery Management ──
 function setupGalleryManagement() {
-  const codePre = document.getElementById('gas-script-code');
-  const copyBtn = document.getElementById('copy-gas-code-btn');
-  const configForm = document.getElementById('admin-gallery-config-form');
-  const urlInput = document.getElementById('gallery-webapp-url-input');
-  const resetBtn = document.getElementById('gallery-config-reset-btn');
+  const galleryConfig = KFL_CONFIG?.GOOGLE_DRIVE_GALLERY;
+  const webAppLink = document.getElementById('gallery-webapp-link');
+  const rootFolderLink = document.getElementById('gallery-root-folder-link');
 
-  const GAS_CODE = `/**
- * KFL Google Drive Gallery Connector
- * 구글 드라이브 KFL-Gallery 상위 폴더 내 하위 폴더들을 동적으로 탐색하여 
- * 팀별 사진 썸네일과 정보를 웹사이트로 전달합니다.
- */
-function doGet(e) {
-  // 1. 여기에 KFL-Gallery 폴더 ID를 입력하세요
-  const ROOT_FOLDER_ID = "여기에_KFL_GALLERY_폴더ID_입력";
-
-  try {
-    const rootFolder = DriveApp.getFolderById(ROOT_FOLDER_ID);
-    const subFolders = rootFolder.getFolders();
-    
-    const foldersList = [];
-    const allPhotos = [];
-
-    while (subFolders.hasNext()) {
-      const folder = subFolders.next();
-      const folderName = folder.getName();
-      foldersList.push({
-        id: folder.getId(),
-        name: folderName,
-        url: folder.getUrl()
-      });
-
-      const files = folder.getFiles();
-      while (files.hasNext()) {
-        const file = files.next();
-        const mime = file.getMimeType();
-        // 이미지 파일만 추출 (JPEG, PNG, WEBP 등)
-        if (mime.indexOf('image/') !== -1) {
-          allPhotos.push({
-            id: file.getId(),
-            name: file.getName(),
-            team: folderName,
-            folderId: folder.getId(),
-            folderUrl: folder.getUrl(),
-            thumbnail: "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1000",
-            viewUrl: "https://lh3.googleusercontent.com/d/" + file.getId(),
-            driveUrl: file.getUrl(),
-            created: file.getDateCreated().toISOString()
-          });
-        }
-      }
-    }
-
-    // 팀 폴더 이름순 정렬 (12-1, 12-2, 12-3 ...)
-    foldersList.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-    // 최신 등록 사진순 정렬
-    allPhotos.sort((a, b) => new Date(b.created) - new Date(a.created));
-
-    const result = {
-      status: "success",
-      rootFolderName: rootFolder.getName(),
-      rootFolderUrl: rootFolder.getUrl(),
-      folders: foldersList,
-      photos: allPhotos,
-      totalPhotos: allPhotos.length
-    };
-
-    return ContentService.createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
+  if (webAppLink && galleryConfig?.WEBAPP_URL) {
+    webAppLink.href = galleryConfig.WEBAPP_URL;
   }
-}`;
-
-  if (codePre) {
-    codePre.textContent = GAS_CODE;
-  }
-
-  // 기존 저장된 API URL 불러오기
-  const savedUrl = localStorage.getItem('kfl_gdrive_gallery_api') || KFL_CONFIG?.GOOGLE_DRIVE_GALLERY?.WEBAPP_URL || '';
-  if (urlInput) {
-    urlInput.value = savedUrl;
-  }
-
-  // 코드 복사 버튼
-  if (copyBtn) {
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(GAS_CODE).then(() => {
-        showToast({ title: '코드 복사 완료', message: 'Google Apps Script 코드가 클립보드에 복사되었습니다.', type: 'info' });
-      }).catch(() => {
-        showToast({ title: '복사 실패', message: '코드를 직접 드래그하여 복사해 주세요.', type: 'error' });
-      });
-    });
-  }
-
-  // URL 저장
-  if (configForm) {
-    configForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newUrl = urlInput.value.trim();
-      if (!newUrl) {
-        showToast({ title: '오류', message: 'Web App URL을 입력해 주세요.', type: 'error' });
-        return;
-      }
-      localStorage.setItem('kfl_gdrive_gallery_api', newUrl);
-      localStorage.removeItem('kfl_gdrive_gallery_cache'); // 캐시 초기화
-      showToast({ title: '설정 저장 완료', message: '구글 드라이브 갤러리 API가 연결되었습니다.', type: 'info' });
-    });
-  }
-
-  // 초기화 버튼
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      localStorage.removeItem('kfl_gdrive_gallery_api');
-      localStorage.removeItem('kfl_gdrive_gallery_cache');
-      if (urlInput) urlInput.value = '';
-      showToast({ title: '초기화 완료', message: '기본 설정으로 초기화되었습니다.', type: 'info' });
-    });
+  if (rootFolderLink && galleryConfig?.ROOT_FOLDER_URL) {
+    rootFolderLink.href = galleryConfig.ROOT_FOLDER_URL;
   }
 }
-

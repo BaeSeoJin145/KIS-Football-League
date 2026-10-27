@@ -69,10 +69,9 @@ const KFL_CONFIG = {
 
   // Google Drive Gallery
   GOOGLE_DRIVE_GALLERY: {
-    // Google Apps Script 배포 URL (관리자 화면에서 설정하거나 여기에 입력)
-    WEBAPP_URL: '',
-    // KFL-Gallery 구글 드라이브 기본 공유 링크
-    ROOT_FOLDER_URL: '',
+    // 고정된 Google Apps Script 배포 URL 및 KFL-Gallery 공유 링크
+    WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbyuXGqgHwcSCpLgNPuS8BUZZ9tWRXNVqtCzk22SEL3SY7ohnWBjqGi4kFKznulMP0g3ZA/exec',
+    ROOT_FOLDER_URL: 'https://drive.google.com/drive/folders/12IuF-6r1qyvOZSxWcI7E-i_IKZAQTCyY?usp=sharing',
     // 캐시 시간 (분)
     CACHE_EXPIRY_MINUTES: 10
   }
@@ -86,4 +85,3 @@ Object.freeze(KFL_CONFIG.EVENT_TYPES);
 Object.freeze(KFL_CONFIG.EVENT_TYPE_LABELS);
 Object.freeze(KFL_CONFIG.POSITION_LABELS);
 Object.freeze(KFL_CONFIG.GOOGLE_DRIVE_GALLERY);
-

@@ -9,21 +9,21 @@
   'use strict';
 
   // 로컬 스토리지 키
-  const STORAGE_KEY_API_URL = 'kfl_gdrive_gallery_api';
-  const STORAGE_KEY_CACHE = 'kfl_gdrive_gallery_cache';
+  const STORAGE_KEY_CACHE = 'kfl_gdrive_gallery_cache_v2';
   const CACHE_EXPIRY_MS = (KFL_CONFIG?.GOOGLE_DRIVE_GALLERY?.CACHE_EXPIRY_MINUTES || 10) * 60 * 1000;
+  const ROOT_FOLDER_URL = KFL_CONFIG?.GOOGLE_DRIVE_GALLERY?.ROOT_FOLDER_URL || 'https://drive.google.com/';
 
   // 상태 관리
   let galleryData = {
     folders: [
-      { id: 'f-12-1', name: '12-1', url: 'https://drive.google.com/' },
-      { id: 'f-12-2', name: '12-2', url: 'https://drive.google.com/' },
-      { id: 'f-12-3', name: '12-3', url: 'https://drive.google.com/' },
-      { id: 'f-12-4', name: '12-4', url: 'https://drive.google.com/' },
-      { id: 'f-12-5', name: '12-5', url: 'https://drive.google.com/' }
+      { id: 'f-12-1', name: '12-1', url: ROOT_FOLDER_URL },
+      { id: 'f-12-2', name: '12-2', url: ROOT_FOLDER_URL },
+      { id: 'f-12-3', name: '12-3', url: ROOT_FOLDER_URL },
+      { id: 'f-12-4', name: '12-4', url: ROOT_FOLDER_URL },
+      { id: 'f-12-5', name: '12-5', url: ROOT_FOLDER_URL }
     ],
     photos: [],
-    rootFolderUrl: 'https://drive.google.com/',
+    rootFolderUrl: ROOT_FOLDER_URL,
     rootFolderName: 'KFL-Gallery'
   };
 
@@ -58,7 +58,7 @@
    * 구글 앱스 스크립트 웹앱 URL 가져오기
    */
   function getApiUrl() {
-    return localStorage.getItem(STORAGE_KEY_API_URL) || KFL_CONFIG?.GOOGLE_DRIVE_GALLERY?.WEBAPP_URL || '';
+    return KFL_CONFIG?.GOOGLE_DRIVE_GALLERY?.WEBAPP_URL || '';
   }
 
   /**
@@ -103,7 +103,7 @@
           // folders 정규화: [{ id, name, url }]
           const normalizedFolders = (result.folders || []).map(f => {
             if (typeof f === 'string') {
-              return { id: f, name: f, url: result.rootFolderUrl || '#' };
+              return { id: f, name: f, url: result.rootFolderUrl || ROOT_FOLDER_URL };
             }
             return {
               id: f.id || f.name,
@@ -115,7 +115,7 @@
           const newGalleryData = {
             folders: normalizedFolders,
             photos: result.photos || [],
-            rootFolderUrl: result.rootFolderUrl || 'https://drive.google.com/',
+            rootFolderUrl: result.rootFolderUrl || ROOT_FOLDER_URL,
             rootFolderName: result.rootFolderName || 'KFL-Gallery'
           };
 
@@ -172,20 +172,20 @@
   function loadFallbackData() {
     galleryData = {
       folders: [
-        { id: 'f-12-1', name: '12-1', url: 'https://drive.google.com/' },
-        { id: 'f-12-2', name: '12-2', url: 'https://drive.google.com/' },
-        { id: 'f-12-3', name: '12-3', url: 'https://drive.google.com/' },
-        { id: 'f-12-4', name: '12-4', url: 'https://drive.google.com/' },
-        { id: 'f-12-5', name: '12-5', url: 'https://drive.google.com/' }
+        { id: 'f-12-1', name: '12-1', url: ROOT_FOLDER_URL },
+        { id: 'f-12-2', name: '12-2', url: ROOT_FOLDER_URL },
+        { id: 'f-12-3', name: '12-3', url: ROOT_FOLDER_URL },
+        { id: 'f-12-4', name: '12-4', url: ROOT_FOLDER_URL },
+        { id: 'f-12-5', name: '12-5', url: ROOT_FOLDER_URL }
       ],
-      rootFolderUrl: 'https://drive.google.com/',
+      rootFolderUrl: ROOT_FOLDER_URL,
       rootFolderName: 'KFL-Gallery',
       photos: [
         {
           id: 'demo-1',
           name: '12-1 경기 킥오프 장면',
           team: '12-1',
-          folderUrl: 'https://drive.google.com/',
+          folderUrl: ROOT_FOLDER_URL,
           thumbnail: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80',
           viewUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&q=80',
           driveUrl: '#',
@@ -195,7 +195,7 @@
           id: 'demo-2',
           name: '12-2 슈팅 환호',
           team: '12-2',
-          folderUrl: 'https://drive.google.com/',
+          folderUrl: ROOT_FOLDER_URL,
           thumbnail: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&q=80',
           viewUrl: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=1600&q=80',
           driveUrl: '#',
@@ -205,7 +205,7 @@
           id: 'demo-3',
           name: '12-3 수비 클리어링',
           team: '12-3',
-          folderUrl: 'https://drive.google.com/',
+          folderUrl: ROOT_FOLDER_URL,
           thumbnail: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80',
           viewUrl: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1600&q=80',
           driveUrl: '#',
@@ -215,7 +215,7 @@
           id: 'demo-4',
           name: '12-4 골키퍼 선방 장면',
           team: '12-4',
-          folderUrl: 'https://drive.google.com/',
+          folderUrl: ROOT_FOLDER_URL,
           thumbnail: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&q=80',
           viewUrl: 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1600&q=80',
           driveUrl: '#',
@@ -225,7 +225,7 @@
           id: 'demo-5',
           name: '12-5 단체 사진',
           team: '12-5',
-          folderUrl: 'https://drive.google.com/',
+          folderUrl: ROOT_FOLDER_URL,
           thumbnail: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80',
           viewUrl: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1600&q=80',
           driveUrl: '#',
@@ -254,11 +254,11 @@
     if (!openDriveBtn) return;
 
     if (activeTeam === 'all') {
-      openDriveBtn.href = galleryData.rootFolderUrl || 'https://drive.google.com/';
+      openDriveBtn.href = galleryData.rootFolderUrl || ROOT_FOLDER_URL;
       if (driveBtnText) driveBtnText.textContent = '구글 드라이브 열기';
     } else {
       const folder = (galleryData.folders || []).find(f => f.name === activeTeam);
-      const targetUrl = folder?.url || galleryData.rootFolderUrl || 'https://drive.google.com/';
+      const targetUrl = folder?.url || galleryData.rootFolderUrl || ROOT_FOLDER_URL;
       openDriveBtn.href = targetUrl;
       if (driveBtnText) driveBtnText.textContent = `${activeTeam} 드라이브 폴더 열기`;
     }
@@ -342,7 +342,7 @@
 
     if (filteredPhotos.length === 0) {
       const folderObj = (galleryData.folders || []).find(f => f.name === activeTeam);
-      const targetDriveUrl = (activeTeam !== 'all' && folderObj?.url) ? folderObj.url : (galleryData.rootFolderUrl || 'https://drive.google.com/');
+      const targetDriveUrl = (activeTeam !== 'all' && folderObj?.url) ? folderObj.url : (galleryData.rootFolderUrl || ROOT_FOLDER_URL);
 
       gridContainer.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 48px 16px; background: var(--bg-surface); border: 2px dashed #151515; border-radius: var(--radius-md);">
@@ -408,7 +408,7 @@
     
     // 팀 구글 드라이브 폴더 링크
     const teamFolder = (galleryData.folders || []).find(f => f.name === photo.team);
-    const folderUrl = photo.folderUrl || teamFolder?.url || galleryData.rootFolderUrl || 'https://drive.google.com/';
+    const folderUrl = photo.folderUrl || teamFolder?.url || galleryData.rootFolderUrl || ROOT_FOLDER_URL;
     if (lightboxTeamFolderLink) {
       lightboxTeamFolderLink.href = folderUrl;
       lightboxTeamFolderLink.textContent = `${photo.team || '팀'} 폴더 열기`;
